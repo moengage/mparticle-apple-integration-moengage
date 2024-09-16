@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder.AppleTV.Storyboard" version="3.0" toolsVersion="32700.99.1234" targetRuntime="AppleTV" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="appleTV" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="9lE-WX-96o">
+            <objects>
+                <viewController id="Xgj-up-wSf" customClass="ViewController" customModule="MoEngageSPMApp" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="aTn-mJ-5lt"/>
+                        <viewControllerLayoutGuide type="bottom" id="BrO-eL-FPV"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Oo6-ab-TCE">
+                        <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" sectionHeaderHeight="66" sectionFooterHeight="66" translatesAutoresizingMaskIntoConstraints="NO" id="RIr-ig-dJE">
+                                <rect key="frame" x="80" y="60" width="1760" height="960"/>
+                                <prototypes>
+                                    <tableViewCell contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="TableViewCell" id="YnH-JG-WRL" customClass="TableViewCell" customModule="MoEngageSPMApp" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="66" width="1760" height="66"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="YnH-JG-WRL" id="DAY-Zp-CpP">
+                                            <rect key="frame" x="0.0" y="0.0" width="1760" height="66"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i0d-yt-8we">
+                                                    <rect key="frame" x="44" y="26" width="1672" height="46"/>
+                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="i0d-yt-8we" firstAttribute="leading" secondItem="DAY-Zp-CpP" secondAttribute="leadingMargin" constant="24" id="528-iq-9ZB"/>
+                                                <constraint firstItem="i0d-yt-8we" firstAttribute="bottom" secondItem="DAY-Zp-CpP" secondAttribute="bottomMargin" constant="16" id="GZQ-Qh-9Wy"/>
+                                                <constraint firstItem="i0d-yt-8we" firstAttribute="top" secondItem="DAY-Zp-CpP" secondAttribute="topMargin" constant="16" id="NWe-nw-gsh"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="i0d-yt-8we" secondAttribute="trailing" constant="24" id="bsg-DW-Jqj"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="titleLabel" destination="i0d-yt-8we" id="r4o-1O-U3q"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="Xgj-up-wSf" id="4X1-NC-NSG"/>
+                                    <outlet property="delegate" destination="Xgj-up-wSf" id="7oA-2N-QZO"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="Rbh-h3-eDf"/>
+                        <constraints>
+                            <constraint firstItem="RIr-ig-dJE" firstAttribute="top" secondItem="Rbh-h3-eDf" secondAttribute="top" id="3b7-BL-lUO"/>
+                            <constraint firstItem="Rbh-h3-eDf" firstAttribute="bottom" secondItem="RIr-ig-dJE" secondAttribute="bottom" id="Kgn-lG-ZBD"/>
+                            <constraint firstItem="RIr-ig-dJE" firstAttribute="leading" secondItem="Rbh-h3-eDf" secondAttribute="leading" id="cWV-oA-Njl"/>
+                            <constraint firstItem="Rbh-h3-eDf" firstAttribute="trailing" secondItem="RIr-ig-dJE" secondAttribute="trailing" id="gSF-HQ-fE8"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="tableView" destination="RIr-ig-dJE" id="VJu-kE-pij"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="7uX-ET-Cqw" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="107" y="3"/>
+        </scene>
+    </scenes>
+</document>

@@ -1,0 +1,84 @@
+name: Run tests
+
+on:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      environment_variables:
+        description: Custom space separated environment variables, that can be used for setup task
+        type: string
+        required: false
+        default: ''
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  cocoapods:
+    name: Build and run tests for CocoaPods on ${{ matrix.platform }}
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        platform: [iOS, tvOS]
+
+    steps:
+    - name: Set custom environment variables
+      if: github.event_name == 'workflow_dispatch'
+      run: |
+        VARIABLES=(${{ inputs.environment_variables }})
+        for variable in ${VARIABLES[@]}; do
+          echo "$variable" >> $GITHUB_ENV
+        done
+
+    - name: Checkout source repository
+      uses: actions/checkout@v4
+
+    - name: Setup Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 3
+
+    - name: Setup Xcode version
+      uses: maxim-lobanov/setup-xcode@v1.4.1
+      with:
+        xcode-version: '15.4'
+
+    - name: Setup Cocoapods
+      uses: maxim-lobanov/setup-cocoapods@v1
+      with:
+        version: latest
+
+    - name: Build and Run tests
+      working-directory: Examples
+      run: |
+        set -eo pipefail
+        rake setup
+        xcodebuild test -workspace MoEngage.xcworkspace -scheme mParticle-MoEngage-${{ matrix.platform }} CODE_SIGN_IDENTITY=-
+
+  swift-package:
+    name: Build and run tests for Swift Package Manager on ${{ matrix.destination }}
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        destination: [iOS Simulator, tvOS Simulator]
+
+    steps:
+    - name: Set custom environment variables
+      if: github.event_name == 'workflow_dispatch'
+      run: |
+        VARIABLES=(${{ inputs.environment_variables }})
+        for variable in ${VARIABLES[@]}; do
+          echo "$variable" >> $GITHUB_ENV
+        done
+
+    - name: Checkout source repository
+      uses: actions/checkout@v4
+
+    - name: Setup Xcode version
+      uses: maxim-lobanov/setup-xcode@v1.4.1
+      with:
+        xcode-version: '15.4'
+
+    - name: Build and Run tests
+      run: xcodebuild test -destination "platform=${{ matrix.destination }}" -scheme mParticle-MoEngage
