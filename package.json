@@ -1,0 +1,14 @@
+{
+  "name": "mParticle-MoEngage",
+  "postBuild": "Utilities/post_build.rb",
+  "mParticleVersion": "8.27.1",
+  "sdkVerMin": "9.19.0",
+  "sdkVerMax": "9.20.0",
+  "packages": [
+    {
+      "name": "mParticle-MoEngage",
+      "version": "1.0.0",
+      "tagPrefix": ""
+    }
+  ]
+}
