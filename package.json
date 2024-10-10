@@ -4,6 +4,36 @@
   "mParticleVersion": "8.27.1",
   "sdkVerMin": "9.19.0",
   "sdkVerMax": "9.20.0",
+  "xcframework": {
+    "pre": "rake setup",
+    "workspace": "Examples/MoEngagemParticle.xcworkspace",
+    "destinations": [
+      {
+        "platform": "iOS",
+        "schemes": {
+          "mParticle-MoEngage": "mParticle-MoEngage-iOS"
+        }
+      },
+      {
+        "platform": "iOS Simulator",
+        "schemes": {
+          "mParticle-MoEngage": "mParticle-MoEngage-iOS"
+        }
+      },
+      {
+        "platform": "tvOS",
+        "schemes": {
+          "mParticle-MoEngage": "mParticle-MoEngage-tvOS"
+        }
+      },
+      {
+        "platform": "tvOS Simulator",
+        "schemes": {
+          "mParticle-MoEngage": "mParticle-MoEngage-tvOS"
+        }
+      }
+    ]
+  },
   "packages": [
     {
       "name": "mParticle-MoEngage",

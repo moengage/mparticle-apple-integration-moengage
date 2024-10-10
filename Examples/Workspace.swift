@@ -1,3 +1,3 @@
 import ProjectDescription
 
-let workspace = Workspace(name: "MoEngage", projects: ["./",])
+let workspace = Workspace(name: "MoEngagemParticle", projects: ["./",])

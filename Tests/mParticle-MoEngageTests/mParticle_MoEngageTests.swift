@@ -289,7 +289,7 @@ final class mParticle_MoEngageTests: XCTestCase {
         let kit = MPKitMoEngage()
         let config = ["appId": "abcde"]
         let _ = kit.didFinishLaunching(withConfiguration: config)
-        
+
         let userInfo: [String: Any] = ["moengage": ["cid": "test", "app_id": "abcde"], "app_extra": [:]]
         let results = [
             kit.setDeviceToken("token".data(using: .utf8)!),
