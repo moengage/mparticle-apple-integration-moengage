@@ -54,7 +54,7 @@ jobs:
       run: |
         set -eo pipefail
         rake setup
-        xcodebuild test -workspace MoEngage.xcworkspace -scheme mParticle-MoEngage-${{ matrix.platform }} CODE_SIGN_IDENTITY=-
+        xcodebuild test -workspace MoEngagemParticle.xcworkspace -scheme mParticle-MoEngage-${{ matrix.platform }} CODE_SIGN_IDENTITY=-
 
   swift-package:
     name: Build and run tests for Swift Package Manager on ${{ matrix.destination }}

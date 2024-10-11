@@ -1,3 +1,6 @@
+require 'json'
+require 'ostruct'
+
 Pod::Spec.new do |s|
     s.name             = 'mParticle-MoEngage'
     s.version          = '1.0.0'

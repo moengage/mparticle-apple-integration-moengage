@@ -7,7 +7,7 @@ let defaultSettings: SettingsDictionary = [:]
     ])
 
 let project = Project(
-    name: "MoEngage",
+    name: "MoEngagemParticle",
     packages: [
         .local(path: "../")
     ],
