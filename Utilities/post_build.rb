@@ -4,6 +4,7 @@
 # Update Package.swift, version constants as per package.json
 
 require 'json'
+require 'ostruct'
 
 config = JSON.parse(File.read('package.json'), {object_class: OpenStruct})
 
