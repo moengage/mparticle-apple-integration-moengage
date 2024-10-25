@@ -1,5 +1,5 @@
 //
-//  MPKitMoEngage+mParticle_MoEngageObjC.m
+//  MPKitMoEngageObjC.m
 //
 //
 //  Created by Soumya Ranjan Mahunt on 04/09/24.

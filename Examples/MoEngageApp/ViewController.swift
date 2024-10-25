@@ -149,6 +149,41 @@ class ViewController: UIViewController {
             ]
             self.mPartcle.logEvent(event)
         }),
+        ("Track Commerce Event", { [unowned self] in
+            // Product
+            let product = MPProduct(name: "productName", sku: "productSKU", quantity: 2, price: 2)
+            product.category = "productCategory"
+            product.couponCode = "productCouponCode"
+            product.position = 20
+            product.unitPrice = 2.0
+            product.quantity = 5.0
+            product.brand = "productBrand"
+            product.variant = "productVariant"
+            product.setUserDefinedAttributes(["customAttrKey": "customAttrValue"])
+            // Transaction Attributes
+            let tAttr = MPTransactionAttributes()
+            tAttr.transactionId = "customTransactionId_\(DispatchTime.now().uptimeNanoseconds)"
+            // Event
+            let event = MPCommerceEvent(action: .addToCart, product: product)
+            event.currency = "inr"
+            event.transactionAttributes = tAttr
+            event.customAttributes = [
+                "dupe":  "default",
+                "general":  "value",
+                "audioPlayed":  "Dangerous",
+                "artist":  "David Garrett",
+                "testDate":  Date(),
+                "testDate2":  self.getFormattedDate(),
+                "int": 12,
+                "double": 3.1416,
+                "bool": true,
+                "arr_int": [-13, 12, 0],
+                "arr_double": [-1.3, 12, 3.1416],
+                "arr_bool": [false, true, true],
+                "arr_str": ["string", "test", "dummy"],
+            ]
+            self.mPartcle.logEvent(event)
+        }),
         ("Flush Data", { [unowned self] in
             self.mPartcle.upload()
         }),

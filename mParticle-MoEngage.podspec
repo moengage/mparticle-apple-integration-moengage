@@ -31,7 +31,7 @@ Pod::Spec.new do |s|
     s.dependency 'MoEngage-iOS-SDK', ">= #{config.sdkVerMin}", "<#{config.sdkVerMax}"
 
     s.test_spec 'Tests' do |ts|
-      ts.source_files =  "Tests/mParticle-MoEngageTests/**/*.{swift,h,m}"
+      ts.source_files = "Tests/mParticle-MoEngageTests/**/*.{swift,h,m}"
       ts.dependency 'mParticle-Apple-SDK'
       ts.dependency 'MoEngage-iOS-SDK'
       ts.scheme = { :code_coverage => true }

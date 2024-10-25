@@ -37,7 +37,7 @@ Post the above command completion, workspace file in [Examples](#examples folder
 > You might have to give [tuist](https://github.com/tuist/tuist) permission to run on your machine.
 
 > [!TIP]
-> See [additional tasks](#additional-tasks) section for more detailed setup guide.
+> Run `rake -D setup` to know supported environment variables and configuration options. See [additional tasks](#additional-tasks) section for more detailed setup guide.
 
 ## Additional tasks
 

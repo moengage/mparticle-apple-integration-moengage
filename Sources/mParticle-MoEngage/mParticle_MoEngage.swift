@@ -17,9 +17,15 @@ public final class MPKitMoEngage: NSObject, MPKitProtocol {
     internal private(set) var settings: MPKitMoEngageSettings?
 
     public func didFinishLaunching(withConfiguration configuration: [AnyHashable: Any]) -> MPKitExecStatus {
-        guard let workspaceId = configuration[MPKitMoEngageConstant.workspaceId] as? String else {
+        guard var workspaceId = configuration[MPKitMoEngageConstant.workspaceId] as? String else {
             MoEngageLogger.logDefault(message: "App ID not present in mParticle settings")
             return execStatus(.requirementsNotMet)
+        }
+
+        // Remove debug suffix
+        let debugIdentifier = MPKitMoEngageConstant.debugIdentifier
+        if workspaceId.hasSuffix(debugIdentifier) {
+            workspaceId = String(workspaceId.dropLast(debugIdentifier.count))
         }
 
         self.configuration = configuration
@@ -166,6 +172,7 @@ extension MPKitMoEngage {
 extension MPKitMoEngage {
 
     public func onSetUserAttribute(_ user: FilteredMParticleUser) -> MPKitExecStatus {
+        guard settings != nil else { return execStatus(.requirementsNotMet) }
         for (key, value) in user.userAttributes {
             let result = self.setUserAttribute(key, value: value)
             if !result.success {
@@ -265,11 +272,6 @@ extension MPKitMoEngage {
             MoEngageSDKAnalytics.sharedInstance.setMobileNumber(mobile, forAppID: settings.workspaceId)
         }
 
-        // WORKAROUND: for setATTStatus:withATTStatusTimestampMillis: callback not invoked
-        if let _ = request.userIdentities?[MPIdentity.iosAdvertiserId.rawValue as NSNumber] {
-            MoEngageSDKAnalytics.sharedInstance.enableIDFATracking(forAppID: settings.workspaceId)
-        }
-
         MoEngageSDKAnalytics.sharedInstance.setUserAttribute(user.userId, withAttributeName: MPKitMoEngageConstant.mParticleId)
         return execStatus(.success)
     }
@@ -279,14 +281,47 @@ extension MPKitMoEngage {
 extension MPKitMoEngage {
 
     public func logBaseEvent(_ event: MPBaseEvent) -> MPKitExecStatus {
+        guard settings != nil else { return execStatus(.requirementsNotMet) }
+        switch event {
+        case let event as MPEvent:
+            return logEvent(event)
+        case let event as MPCommerceEvent:
+            return logCommerceEvent(event)
+        default:
+            return execStatus(.cannotExecute)
+        }
+    }
+
+    public func logEvent(_ event: MPEvent) -> MPKitExecStatus {
         guard let settings = settings else { return execStatus(.requirementsNotMet) }
-        guard let event = event as? MPEvent else { return execStatus(.unavailable) }
-        let properties = MoEngageProperties(withAttributes: event.customAttributes)
+
+        let attributes = [
+            MPKitMoEngageConstant.eventType: event.type.stringValue
+        ].merging(event.customAttributes ?? [:], uniquingKeysWith: { $1 })
+        let properties = MoEngageProperties(withAttributes: attributes)
         if !event.shouldBeginSession {
             properties.setNonInteractive()
         }
-        MoEngageSDKAnalytics.sharedInstance.trackEvent(event.name, withProperties: properties, forAppID: settings.workspaceId)
+        MoEngageSDKAnalytics.sharedInstance.trackEvent(
+            event.name, withProperties: properties,
+            forAppID: settings.workspaceId
+        )
         return execStatus(.success)
+    }
+
+    public func logCommerceEvent(
+        _ commerceEvent: MPCommerceEvent
+    ) -> MPKitExecStatus {
+        guard settings != nil else { return execStatus(.requirementsNotMet) }
+
+        let status = MPKitExecStatus(
+            sdkCode: Self.kitCode(), returnCode: .success, forwardCount: 0
+        )
+        for instruction in commerceEvent.expandedInstructions() {
+            _ = logEvent(instruction.event)
+            status.incrementForwardCount()
+        }
+        return status
     }
 
     public func setATTStatus(
