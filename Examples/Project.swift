@@ -27,6 +27,10 @@ let project = Project(
             ],
             headers: .headers(public: "MoEngageApp/**/*.h"),
             entitlements: "MoEngageApp/MoEngageApp.entitlements",
+            dependencies: [
+                .target(name: "NotificationService", condition: nil),
+                .target(name: "NotificationContent", condition: nil),
+            ],
             settings: .settings(
                 base: defaultSettings
                     .marketingVersion("1.0.0")
@@ -70,9 +74,44 @@ let project = Project(
             ],
             headers: .headers(public: "MoEngageApp/**/*.h"),
             entitlements: "MoEngageApp/MoEngageApp.entitlements",
-             dependencies: [
-                .package(product: "mParticle-MoEngage", type: .runtime)
-             ],
+            dependencies: [
+                .package(product: "mParticle-MoEngage", type: .runtime),
+            ],
+            settings: .settings(
+                base: defaultSettings
+                    .marketingVersion("1.0.0")
+                    .currentProjectVersion("1.0.0")
+            )
+        ),
+
+        // Extensions
+        .target(
+            name: "NotificationService",
+            destinations: .iOS,
+            product: .appExtension,
+            bundleId: "com.alphadevs.MoEngage.NotificationService",
+            deploymentTargets: .iOS("13.0"),
+            infoPlist: "NotificationService/Info.plist",
+            sources: ["NotificationService/**/*.{swift,h,m}"],
+            entitlements: "NotificationService/NotificationService.entitlements",
+            dependencies: [],
+            settings: .settings(
+                base: defaultSettings
+                    .marketingVersion("1.0.0")
+                    .currentProjectVersion("1.0.0")
+            )
+        ),
+        .target(
+            name: "NotificationContent",
+            destinations: .iOS,
+            product: .appExtension,
+            bundleId: "com.alphadevs.MoEngage.NotificationContent",
+            deploymentTargets: .iOS("13.0"),
+            infoPlist: "NotificationContent/Info.plist",
+            sources: ["NotificationContent/**/*.{swift,h,m}"],
+            resources: ["NotificationContent/**/*.{xib,storyboard,xcassets}"],
+            entitlements: "NotificationContent/NotificationContent.entitlements",
+            dependencies: [],
             settings: .settings(
                 base: defaultSettings
                     .marketingVersion("1.0.0")

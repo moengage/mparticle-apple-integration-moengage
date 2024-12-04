@@ -18,6 +18,32 @@ target 'MoEngageCocoaApp' do
     pod 'MoEngageSDK', **dev_source
     pod 'MoEngage-iOS-SDK', **dev_source
   end
+
+  target 'NotificationContent' do
+    use_frameworks!
+    inherit! :search_paths
+
+    # Pods for NotificationContent
+    if dev_source
+      pod 'MoEngage-iOS-SDK/RichNotification', **dev_source
+      pod 'MoEngageRichNotification', **dev_source
+    else
+      pod 'MoEngage-iOS-SDK/RichNotification'
+    end
+  end
+
+  target 'NotificationService' do
+    use_frameworks!
+    inherit! :search_paths
+
+    # Pods for NotificationService
+    if dev_source
+      pod 'MoEngage-iOS-SDK/RichNotification', **dev_source
+      pod 'MoEngageRichNotification', **dev_source
+    else
+      pod 'MoEngage-iOS-SDK/RichNotification'
+    end
+  end
 end
 
 target 'MoEngageCocoaTVApp' do
