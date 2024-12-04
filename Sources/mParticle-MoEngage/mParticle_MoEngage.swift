@@ -188,6 +188,7 @@ extension MPKitMoEngage {
         case mParticleUserAttributeMobileNumber, "$MPUserMobile":
             guard let value = value as? String else { break }
             MoEngageSDKAnalytics.sharedInstance.setMobileNumber(value, forAppID: workspaceId)
+            return execStatus(.success)
         case mParticleUserAttributeGender:
             let gender: MoEngageUserGender
             switch value as? String {
@@ -199,12 +200,15 @@ extension MPKitMoEngage {
                 gender = .others
             }
             MoEngageSDKAnalytics.sharedInstance.setGender(gender, forAppID: workspaceId)
+            return execStatus(.success)
         case mParticleUserAttributeFirstName:
             guard let value = value as? String else { break }
             MoEngageSDKAnalytics.sharedInstance.setFirstName(value, forAppID: workspaceId)
+            return execStatus(.success)
         case mParticleUserAttributeLastName:
             guard let value = value as? String else { break }
             MoEngageSDKAnalytics.sharedInstance.setLastName(value, forAppID: workspaceId)
+            return execStatus(.success)
         default:
             break
         }
@@ -272,7 +276,7 @@ extension MPKitMoEngage {
             MoEngageSDKAnalytics.sharedInstance.setMobileNumber(mobile, forAppID: settings.workspaceId)
         }
 
-        MoEngageSDKAnalytics.sharedInstance.setUserAttribute(user.userId, withAttributeName: MPKitMoEngageConstant.mParticleId)
+        MoEngageSDKAnalytics.sharedInstance.setUserAttribute("\(user.userId)", withAttributeName: MPKitMoEngageConstant.mParticleId, forAppID: settings.workspaceId)
         return execStatus(.success)
     }
 }
