@@ -58,3 +58,15 @@ task :xcframework => [config.xcframework.workspace] do |t, args|
   res = http.request(req)
   eval(res.body)
 end
+
+namespace 'test' do
+  require_relative 'Utilities/test'
+  desc 'Run SPM tests'
+  task :spm do |t, args|
+    run_spm_tests
+  end
+  desc 'Run CocoaPods tests'
+  task :pods do |t, args|
+    run_pods_tests
+  end
+end

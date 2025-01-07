@@ -16,11 +16,8 @@ concurrency:
 
 jobs:
   cocoapods:
-    name: Build and run tests for CocoaPods on ${{ matrix.platform }}
+    name: Build and run tests for CocoaPods
     runs-on: macos-latest
-    strategy:
-      matrix:
-        platform: [iOS, tvOS]
 
     steps:
     - name: Set custom environment variables
@@ -54,14 +51,11 @@ jobs:
       run: |
         set -eo pipefail
         rake setup
-        xcodebuild test -workspace MoEngagemParticle.xcworkspace -scheme mParticle-MoEngage-${{ matrix.platform }} CODE_SIGN_IDENTITY=-
+        rake test:pods
 
   swift-package:
-    name: Build and run tests for Swift Package Manager on ${{ matrix.destination }}
+    name: Build and run tests for Swift Package Manager
     runs-on: macos-latest
-    strategy:
-      matrix:
-        destination: [iOS Simulator, tvOS Simulator]
 
     steps:
     - name: Set custom environment variables
@@ -81,4 +75,4 @@ jobs:
         xcode-version: '15.4'
 
     - name: Build and Run tests
-      run: xcodebuild test -destination "platform=${{ matrix.destination }}" -scheme mParticle-MoEngage
+      run: rake test:spm
