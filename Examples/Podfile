@@ -1,0 +1,67 @@
+require_relative '../Utilities/common'
+
+target 'MoEngageCocoaApp' do
+  platform :ios, '11.0'
+  use_frameworks!
+
+  # Pods for MoEngageCocoaApp
+  pod 'mParticle-MoEngage', :testspecs => ['Tests'], :path => '../' # comment/remove :path to test released package
+
+  # Development source setup
+  dev_source = MPKit.dev_source
+  if dev_source
+    pod 'MoEngageSecurity', **dev_source
+    pod 'MoEngageCore', **dev_source
+    pod 'MoEngageAnalytics', **dev_source
+    pod 'MoEngageMessaging', **dev_source
+    pod 'MoEngageObjCUtils', **dev_source
+    pod 'MoEngageSDK', **dev_source
+    pod 'MoEngage-iOS-SDK', **dev_source
+  end
+
+  target 'NotificationContent' do
+    use_frameworks!
+    inherit! :search_paths
+
+    # Pods for NotificationContent
+    if dev_source
+      pod 'MoEngage-iOS-SDK/RichNotification', **dev_source
+      pod 'MoEngageRichNotification', **dev_source
+    else
+      pod 'MoEngage-iOS-SDK/RichNotification'
+    end
+  end
+
+  target 'NotificationService' do
+    use_frameworks!
+    inherit! :search_paths
+
+    # Pods for NotificationService
+    if dev_source
+      pod 'MoEngage-iOS-SDK/RichNotification', **dev_source
+      pod 'MoEngageRichNotification', **dev_source
+    else
+      pod 'MoEngage-iOS-SDK/RichNotification'
+    end
+  end
+end
+
+target 'MoEngageCocoaTVApp' do
+  platform :tvos, '11.0'
+  use_frameworks!
+
+  # Pods for MoEngageCocoaTVApp
+  pod 'mParticle-MoEngage', :testspecs => ['Tests'], :path => '../' # comment/remove :path to test released package
+
+  # Development source setup
+  dev_source = MPKit.dev_source
+  if dev_source
+    pod 'MoEngageSecurity', **dev_source
+    pod 'MoEngageCore', **dev_source
+    pod 'MoEngageAnalytics', **dev_source
+    pod 'MoEngageMessaging', **dev_source
+    pod 'MoEngageObjCUtils', **dev_source
+    pod 'MoEngageSDK', **dev_source
+    pod 'MoEngage-iOS-SDK', **dev_source
+  end
+end
