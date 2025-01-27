@@ -277,6 +277,24 @@ extension MPKitMoEngage {
         }
 
         MoEngageSDKAnalytics.sharedInstance.setUserAttribute("\(user.userId)", withAttributeName: MPKitMoEngageConstant.mParticleId, forAppID: settings.workspaceId)
+
+        // set identities
+        if !user.userIdentities.isEmpty {
+            let identities: [(MPIdentity, String)] = user.userIdentities
+                .compactMap { key, value in
+                    guard
+                        let mParticleIdKey = MPIdentity(rawValue: key.uintValue)
+                    else { return nil }
+                    return (mParticleIdKey, value)
+                }
+            MoEngageConfigurator.map(
+                identities: Dictionary(identities) { $1 }
+            ) { identities in
+                MoEngageSDKAnalytics.sharedInstance.identifyUser(
+                    identities: identities, workspaceId: settings.workspaceId
+                )
+            }
+        }
         return execStatus(.success)
     }
 }

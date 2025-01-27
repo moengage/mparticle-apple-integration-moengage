@@ -7,6 +7,7 @@
 
 import Foundation
 import MoEngageSDK
+import mParticle_Apple_SDK
 
 /// This class is used for initializing the MoEngageSDK
 @objc
@@ -68,5 +69,34 @@ public final class MoEngageConfigurator: NSObject {
     private static func trackPluginTypeAndVersion(sdkConfig: MoEngageSDKConfig) {
         let integrationInfo = MoEngageIntegrationInfo(pluginType: .mParticleNative, version: MPKitMoEngageConstant.moduleVersion)
         MoEngageCoreIntegrator.sharedInstance.addIntergrationInfo(info: integrationInfo, appId: sdkConfig.appId)
+    }
+}
+
+extension MoEngageConfigurator {
+    private static var identitiesMap: [MPIdentity: String] = [:]
+
+    /// Set mParticle identities equivalent MoEngage identities.
+    ///
+    /// Set the mapping before initializing mParticle.
+    /// - Parameter mapping: The mapping to set.
+    public static func setMapping(forIdentities mapping: [MPIdentity: String]) {
+        MoEngageCoreHandler.globalQueue.async {
+            Self.identitiesMap = mapping
+        }
+    }
+
+    /// Get mParticle identities equivalent MoEngage identities.
+    /// - Parameters:
+    ///   - identities: The mParticle identities.
+    ///   - completion: The block accepting equivalent MoEngage identities.
+    static func map(identities: [MPIdentity: String], completion: @escaping ([String: String]) -> Void) {
+        MoEngageCoreHandler.globalQueue.async {
+            completion(
+                identities.reduce(into: [:]) { partialResult, item in
+                    guard let moEngageId = Self.identitiesMap[item.key] else { return }
+                    partialResult[moEngageId] = item.value
+                }
+            )
+        }
     }
 }
