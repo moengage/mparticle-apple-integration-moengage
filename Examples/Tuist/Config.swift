@@ -1,6 +1,6 @@
 import ProjectDescription
 
 let config = Config(
-    compatibleXcodeVersions: ["15.4"],
+    compatibleXcodeVersions: ["16.2"],
     swiftVersion: "5.9"
 )
