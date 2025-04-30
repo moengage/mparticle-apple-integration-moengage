@@ -10,7 +10,7 @@ import CoreLocation
 import MoEngageSDK
 import mParticle_Apple_SDK
 
-@objc
+@objc(MPKitMoEngage)
 public final class MPKitMoEngage: NSObject, MPKitProtocol {
     public private(set) var started: Bool = false
     public var configuration: [AnyHashable: Any] = [:]
