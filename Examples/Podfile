@@ -1,7 +1,7 @@
 require_relative '../Utilities/common'
 
 target 'MoEngageCocoaApp' do
-  platform :ios, '11.0'
+  platform :ios, '13.0'
   use_frameworks!
 
   # Pods for MoEngageCocoaApp
@@ -12,9 +12,7 @@ target 'MoEngageCocoaApp' do
   if dev_source
     pod 'MoEngageSecurity', **dev_source
     pod 'MoEngageCore', **dev_source
-    pod 'MoEngageAnalytics', **dev_source
     pod 'MoEngageMessaging', **dev_source
-    pod 'MoEngageObjCUtils', **dev_source
     pod 'MoEngageSDK', **dev_source
     pod 'MoEngage-iOS-SDK', **dev_source
   end
@@ -47,7 +45,7 @@ target 'MoEngageCocoaApp' do
 end
 
 target 'MoEngageCocoaTVApp' do
-  platform :tvos, '11.0'
+  platform :tvos, '13.0'
   use_frameworks!
 
   # Pods for MoEngageCocoaTVApp
@@ -58,9 +56,7 @@ target 'MoEngageCocoaTVApp' do
   if dev_source
     pod 'MoEngageSecurity', **dev_source
     pod 'MoEngageCore', **dev_source
-    pod 'MoEngageAnalytics', **dev_source
     pod 'MoEngageMessaging', **dev_source
-    pod 'MoEngageObjCUtils', **dev_source
     pod 'MoEngageSDK', **dev_source
     pod 'MoEngage-iOS-SDK', **dev_source
   end

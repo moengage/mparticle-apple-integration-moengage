@@ -5,13 +5,13 @@ import PackageDescription
 
 let package = Package(
     name: "mParticle-MoEngage",
-    platforms: [.iOS(.v11), .tvOS(.v11)],
+    platforms: [.iOS(.v13), .tvOS(.v13)],
     products: [
         .library(name: "mParticle-MoEngage", targets: ["mParticle-MoEngage", "mParticle-MoEngageObjC"]),
     ],
     dependencies: [
         .package(url: "https://github.com/mParticle/mparticle-apple-sdk", from: "8.27.1"),
-        .package(url: "https://github.com/moengage/MoEngage-iOS-SDK.git", "9.21.0"..<"9.22.0")
+        .package(url: "https://github.com/moengage/MoEngage-iOS-SDK.git", "9.23.0"..<"9.24.0")
     ],
     targets: [
         .target(

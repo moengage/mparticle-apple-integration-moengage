@@ -32,6 +32,11 @@ jobs:
         MO_CERTIFICATE_PASSWORD: ${{ secrets.MO_CERTIFICATE_PASSWORD }}
         MO_CERTIFICATE_BASE64: ${{ secrets.MO_CERTIFICATE_BASE64 }}
 
+    - name: Merge Development to Master
+      uses: ./scripts/actions/action-git-development-to-master
+      with:
+        working-directory: source
+
     - name: Create release
       uses: ./scripts/actions/ios-sdk-client-release
       with:
