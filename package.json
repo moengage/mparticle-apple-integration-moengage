@@ -38,6 +38,7 @@
     {
       "name": "mParticle-MoEngage",
       "version": "1.0.0",
+      "changelog": "CHANGELOG.md",
       "tagPrefix": ""
     }
   ]

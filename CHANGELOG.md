@@ -1,13 +1,7 @@
-Change Log
-==========
+# Release Date
 
-Next Release
--------------------------------------------
+## Release Version
 
-* Added multi-id support.
-* Updated iOS and tvOS deployment target to 13.
-
-Version 1.0.0 *(07-01-2025)*
--------------------------------------------
-
-* Initial Release which supports mParticle Swift API intigrations.
+- [NA] Updated CI/CD
+- [minor] Added multi-id support.
+- [major] Updated iOS and tvOS deployment target to 13.
