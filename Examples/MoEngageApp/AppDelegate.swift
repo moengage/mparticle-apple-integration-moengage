@@ -20,10 +20,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         // Configure MoEngage
         MoEngageSDKCore.sharedInstance.enableAllLogs()
-        let sdkConfig = MoEngageSDKConfig(appId: "YOUR APP ID", dataCenter: .data_center_01)
-        sdkConfig.appGroupID = "group.com.alphadevs.MoEngage.NotificationServices"
-        sdkConfig.consoleLogConfig = .init(isLoggingEnabled: true, loglevel: .verbose)
-        MoEngageConfigurator.configureDefaultInstance(sdkConfig: sdkConfig)
+        MoEngageConfigurator.configureDefaultInstance()
+
+        // Code based initialization
+        // let sdkConfig = MoEngageSDKConfig(appId: "YOUR APP ID", dataCenter: .data_center_01)
+        // sdkConfig.appGroupID = "group.com.alphadevs.MoEngage.NotificationServices"
+        // sdkConfig.consoleLogConfig = .init(isLoggingEnabled: true, loglevel: .verbose)
+        // MoEngageConfigurator.configureDefaultInstance(sdkConfig: sdkConfig)
 
         // Initialize mParticle
         let mParticleOptions = MParticleOptions(key: "Your API Key", secret: "Your Secret")

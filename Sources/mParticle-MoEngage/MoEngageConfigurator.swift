@@ -13,6 +13,21 @@ import mParticle_Apple_SDK
 @objc
 public final class MoEngageConfigurator: NSObject {
     /// Method to initialize the default instance of MoEngageSDK
+    /// with data from Info.plist.
+    @objc public static func configureDefaultInstance() {
+        MoEngage.sharedInstance.initializeDefaultInstance()
+
+        guard
+            let sdkConfig = try? MoEngageInitialization.fetchSDKConfigurationFromInfoPlist(),
+            !sdkConfig.appId.isEmpty
+        else {
+            MoEngageLogger.logDefault(message: "App ID is empty. Please provide a valid App ID to setup the SDK.")
+            return
+        }
+        trackPluginTypeAndVersion(sdkConfig: sdkConfig)
+    }
+
+    /// Method to initialize the default instance of MoEngageSDK
     /// - Parameter sdkConfig: MoEngageSDKConfig
     @objc public static func configureDefaultInstance(sdkConfig: MoEngageSDKConfig) {
         updateSDKConfig(sdkConfig: sdkConfig)
