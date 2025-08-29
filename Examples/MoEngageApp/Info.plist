@@ -54,7 +54,7 @@
 		<!-- by default added if customer hasn't provided preference -->
 
 		<key>IntegrationPartner</key>
-		<string>segment</string>
+		<string>mparticle</string>
 		<!-- segment/mparticle, default: none -->
 
 		<key>AppGroupName</key>

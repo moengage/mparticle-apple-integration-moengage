@@ -235,13 +235,13 @@ extension MPKitMoEngage {
     public func onIdentifyComplete(
         _ user: FilteredMParticleUser, request: FilteredMPIdentityApiRequest
     ) -> MPKitExecStatus {
-        return updateUser(user, request: request)
+        return updateUser(user, request: request, modified: false)
     }
 
     public func onLoginComplete(
         _ user: FilteredMParticleUser, request: FilteredMPIdentityApiRequest
     ) -> MPKitExecStatus {
-        return updateUser(user, request: request)
+        return updateUser(user, request: request, modified: false)
     }
 
     public func onLogoutComplete(
@@ -249,34 +249,19 @@ extension MPKitMoEngage {
     ) -> MPKitExecStatus {
         guard let settings = settings else { return execStatus(.requirementsNotMet) }
         MoEngageSDKAnalytics.sharedInstance.resetUser(forAppID: settings.workspaceId)
-        return updateUser(user, request: request)
+        return updateUser(user, request: request, modified: false)
     }
 
     public func onModifyComplete(
         _ user: FilteredMParticleUser, request: FilteredMPIdentityApiRequest
     ) -> MPKitExecStatus {
-        return updateUser(user, request: request)
+        return updateUser(user, request: request, modified: true)
     }
 
     private func updateUser(
-        _ user: FilteredMParticleUser, request: FilteredMPIdentityApiRequest
+        _ user: FilteredMParticleUser, request: FilteredMPIdentityApiRequest, modified: Bool
     ) -> MPKitExecStatus {
         guard let settings = settings else { return execStatus(.requirementsNotMet) }
-        if let userId = request.userIdentities?[MPIdentity.alias.rawValue as NSNumber] {
-            MoEngageSDKAnalytics.sharedInstance.setAlias(userId, forAppID: settings.workspaceId)
-        } else if let userId = request.customerId {
-            MoEngageSDKAnalytics.sharedInstance.setUniqueID(userId, forAppID: settings.workspaceId)
-        }
-
-        if let email = request.email {
-            MoEngageSDKAnalytics.sharedInstance.setEmailID(email, forAppID: settings.workspaceId)
-        }
-
-        if let mobile = request.userIdentities?[MPIdentity.mobileNumber.rawValue as NSNumber] {
-            MoEngageSDKAnalytics.sharedInstance.setMobileNumber(mobile, forAppID: settings.workspaceId)
-        }
-
-        MoEngageSDKAnalytics.sharedInstance.setUserAttribute("\(user.userId)", withAttributeName: MPKitMoEngageConstant.mParticleId, forAppID: settings.workspaceId)
 
         // set identities
         if !user.userIdentities.isEmpty {
@@ -295,6 +280,28 @@ extension MPKitMoEngage {
                 )
             }
         }
+
+        // set attributes
+        if (request.userIdentities?[MPIdentity.alias.rawValue as NSNumber]) != nil {
+            // Skip setalias call as it would be set as identities
+            MoEngageLogger.logDefault(message: "Skipping user alias set for \"\(settings.workspaceId)\"")
+        } else if let userId = request.customerId {
+            if modified {
+                MoEngageSDKAnalytics.sharedInstance.setAlias(userId, forAppID: settings.workspaceId)
+            } else {
+                MoEngageSDKAnalytics.sharedInstance.setUniqueID(userId, forAppID: settings.workspaceId)
+            }
+        }
+
+        if let email = request.email {
+            MoEngageSDKAnalytics.sharedInstance.setEmailID(email, forAppID: settings.workspaceId)
+        }
+
+        if let mobile = request.userIdentities?[MPIdentity.mobileNumber.rawValue as NSNumber] {
+            MoEngageSDKAnalytics.sharedInstance.setMobileNumber(mobile, forAppID: settings.workspaceId)
+        }
+
+        MoEngageSDKAnalytics.sharedInstance.setUserAttribute("\(user.userId)", withAttributeName: MPKitMoEngageConstant.mParticleId, forAppID: settings.workspaceId)
         return execStatus(.success)
     }
 }

@@ -88,7 +88,14 @@ public final class MoEngageConfigurator: NSObject {
 }
 
 extension MoEngageConfigurator {
-    private static var identitiesMap: [MPIdentity: String] = [:]
+    private static let defaultIdentitiesMap: [MPIdentity: String] = [
+        MPIdentity.alias: MoEngageAnalyticsConstants.UserIdentityNames.uid,
+        MPIdentity.customerId: MoEngageAnalyticsConstants.UserIdentityNames.uid,
+        MPIdentity.email: MoEngageAnalyticsConstants.UserIdentityNames.email,
+        MPIdentity.mobileNumber: MoEngageAnalyticsConstants.UserIdentityNames.mobileNumber
+    ]
+
+    private static var identitiesMap = defaultIdentitiesMap
 
     /// Set mParticle identities equivalent MoEngage identities.
     ///
@@ -96,7 +103,7 @@ extension MoEngageConfigurator {
     /// - Parameter mapping: The mapping to set.
     public static func setMapping(forIdentities mapping: [MPIdentity: String]) {
         MoEngageCoreHandler.globalQueue.async {
-            Self.identitiesMap = mapping
+            Self.identitiesMap = Self.defaultIdentitiesMap.merging(mapping) { $1 }
         }
     }
 
@@ -106,6 +113,12 @@ extension MoEngageConfigurator {
     ///   - completion: The block accepting equivalent MoEngage identities.
     static func map(identities: [MPIdentity: String], completion: @escaping ([String: String]) -> Void) {
         MoEngageCoreHandler.globalQueue.async {
+            var identities = identities
+            if identities[MPIdentity.alias] != nil {
+                // If alias is present, it should be used as the primary identifier.
+                identities.removeValue(forKey: MPIdentity.customerId)
+            }
+
             completion(
                 identities.reduce(into: [:]) { partialResult, item in
                     guard let moEngageId = Self.identitiesMap[item.key] else { return }

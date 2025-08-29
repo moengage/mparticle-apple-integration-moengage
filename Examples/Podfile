@@ -1,11 +1,27 @@
 require_relative '../Utilities/common'
 
+subspec_suffix = ENV['MOENGAGE_KMM_FREE'] ? '/Core' : ''
+puts "Adding subspec suffix: #{subspec_suffix}"
+
+# bridge abstract targets to include tests
+abstract_target 'BridgeiOS' do
+  platform :ios, '13.0'
+  use_frameworks!
+  pod 'mParticle-MoEngage', :testspecs => ['Tests'], :path => '../' # comment/remove :path to test released package
+end
+
+abstract_target 'BridgetvOS' do
+  platform :tvos, '13.0'
+  use_frameworks!
+  pod 'mParticle-MoEngage', :testspecs => ['Tests'], :path => '../' # comment/remove :path to test released package
+end
+
 target 'MoEngageCocoaApp' do
   platform :ios, '13.0'
   use_frameworks!
 
   # Pods for MoEngageCocoaApp
-  pod 'mParticle-MoEngage', :testspecs => ['Tests'], :path => '../' # comment/remove :path to test released package
+  pod "mParticle-MoEngage#{subspec_suffix}", :path => '../' # comment/remove :path to test released package
 
   # Development source setup
   dev_source = MPKit.dev_source
@@ -49,7 +65,7 @@ target 'MoEngageCocoaTVApp' do
   use_frameworks!
 
   # Pods for MoEngageCocoaTVApp
-  pod 'mParticle-MoEngage', :testspecs => ['Tests'], :path => '../' # comment/remove :path to test released package
+  pod "mParticle-MoEngage#{subspec_suffix}", :path => '../' # comment/remove :path to test released package
 
   # Development source setup
   dev_source = MPKit.dev_source

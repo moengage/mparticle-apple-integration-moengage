@@ -28,12 +28,20 @@ Pod::Spec.new do |s|
     s.source_files = 'Sources/mParticle-MoEngage/**/*.swift', 'Sources/mParticle-MoEngageObjC/**/*.{h,m}'
     s.project_header_files = 'Sources/mParticle-MoEngageObjC/**/*.h'
     s.dependency 'mParticle-Apple-SDK', "~> #{config.mParticleVersion}"
-    s.dependency 'MoEngage-iOS-SDK', ">= #{config.sdkVerMin}", "<#{config.sdkVerMax}"
+    s.default_subspec = 'KMMedCore'
+  
+    s.subspec 'Core' do |ss|
+      ss.dependency 'MoEngage-iOS-SDK/Core', ">= #{config.sdkVerMin}", "<#{config.sdkVerMax}"
+    end
+
+    s.subspec 'KMMedCore' do |ss|
+      ss.dependency 'mParticle-MoEngage/Core'
+      ss.dependency 'MoEngage-iOS-SDK/KMMedCore'
+    end
 
     s.test_spec 'Tests' do |ts|
       ts.source_files = "Tests/mParticle-MoEngageTests/**/*.{swift,h,m}"
       ts.dependency 'mParticle-Apple-SDK'
-      ts.dependency 'MoEngage-iOS-SDK'
       ts.scheme = { :code_coverage => true }
     end
 end

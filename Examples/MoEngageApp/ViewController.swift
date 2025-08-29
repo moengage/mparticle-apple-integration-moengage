@@ -15,10 +15,18 @@ class ViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     lazy var mPartcle = MParticle.sharedInstance()
 
+    var currentUserRequest: MPIdentityApiRequest {
+        if let user = mPartcle.identity.currentUser {
+            return MPIdentityApiRequest(user: user)
+        } else {
+            return .withEmptyUser()
+        }
+    }
+
     // Actions
     lazy var rows: [(String, () -> Void)] = [
         ("Log In", { [unowned self] in
-            var identityRequest = MPIdentityApiRequest.withEmptyUser()
+            var identityRequest = currentUserRequest
             identityRequest.customerId = "Soumya"
             self.mPartcle.identity.login(identityRequest) { result, error in
                 if let error = error {
@@ -28,7 +36,7 @@ class ViewController: UIViewController {
             }
         }),
         ("Set Alias", { [unowned self] in
-            var identityRequest = MPIdentityApiRequest.withEmptyUser()
+            var identityRequest = currentUserRequest
             identityRequest.setIdentity("SoumyaAlt", identityType: .alias)
             self.mPartcle.identity.modify(identityRequest) { result, error in
                 if let error = error {
@@ -38,7 +46,7 @@ class ViewController: UIViewController {
             }
         }),
         ("Set Phone Number", { [unowned self] in
-            var identityRequest = MPIdentityApiRequest.withEmptyUser()
+            var identityRequest = currentUserRequest
             identityRequest.setIdentity("9999999999", identityType: .mobileNumber)
             self.mPartcle.identity.modify(identityRequest) { result, error in
                 if let error = error {
@@ -57,7 +65,7 @@ class ViewController: UIViewController {
             self.mPartcle.identity.currentUser?.setUserAttribute(mParticleUserAttributeFirstName, value: "Soumya")
         }),
         ("Set Email", { [unowned self] in
-            var identityRequest = MPIdentityApiRequest.withEmptyUser()
+            var identityRequest = currentUserRequest
             identityRequest.email = "foo@example.com"
             self.mPartcle.identity.modify(identityRequest) { result, error in
                 if let error = error {
