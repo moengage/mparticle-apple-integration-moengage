@@ -18,7 +18,7 @@ public final class MPKitMoEngage: NSObject, MPKitProtocol {
 
     public func didFinishLaunching(withConfiguration configuration: [AnyHashable: Any]) -> MPKitExecStatus {
         guard var workspaceId = configuration[MPKitMoEngageConstant.workspaceId] as? String else {
-            MoEngageLogger.logDefault(message: "App ID not present in mParticle settings")
+            MoEngageLogger.logDefault(logLevel: .fatal, message: "App ID not present in mParticle settings")
             return execStatus(.requirementsNotMet)
         }
 
@@ -282,17 +282,6 @@ extension MPKitMoEngage {
         }
 
         // set attributes
-        if (request.userIdentities?[MPIdentity.alias.rawValue as NSNumber]) != nil {
-            // Skip setalias call as it would be set as identities
-            MoEngageLogger.logDefault(message: "Skipping user alias set for \"\(settings.workspaceId)\"")
-        } else if let userId = request.customerId {
-            if modified {
-                MoEngageSDKAnalytics.sharedInstance.setAlias(userId, forAppID: settings.workspaceId)
-            } else {
-                MoEngageSDKAnalytics.sharedInstance.setUniqueID(userId, forAppID: settings.workspaceId)
-            }
-        }
-
         if let email = request.email {
             MoEngageSDKAnalytics.sharedInstance.setEmailID(email, forAppID: settings.workspaceId)
         }

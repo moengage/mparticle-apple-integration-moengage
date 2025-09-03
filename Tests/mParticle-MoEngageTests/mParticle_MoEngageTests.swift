@@ -326,7 +326,7 @@ final class mParticle_MoEngageTests {
         let config = [MPKitMoEngageConstant.workspaceId: "abcde"]
         let _ = kit.didFinishLaunching(withConfiguration: config)
 
-        let userInfo: [String: Any] = ["moengage": ["cid": "test", "app_id": "abcde"]]
+        let userInfo: [String: Any] = ["moengage": ["app_id": "abcde"]]
         let results = [
             kit.receivedUserNotification(userInfo),
             kit.handleAction(withIdentifier: "action", forRemoteNotification: userInfo),
