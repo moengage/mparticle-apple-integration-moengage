@@ -27,7 +27,7 @@ Pod::Spec.new do |s|
     config = JSON.parse(File.read('package.json'), {object_class: OpenStruct})
     s.source_files = 'Sources/mParticle-MoEngage/**/*.swift', 'Sources/mParticle-MoEngageObjC/**/*.{h,m}'
     s.project_header_files = 'Sources/mParticle-MoEngageObjC/**/*.h'
-    s.dependency 'mParticle-Apple-SDK', "~> #{config.mParticleVersion}"
+    s.dependency 'mParticle-Apple-SDK', "~> #{config.mParticleVersionCocoaPods}"
     s.dependency 'MoEngage-iOS-SDK', ">= #{config.sdkVerMin}", "<#{config.sdkVerMax}"
 
     s.test_spec 'Tests' do |ts|
