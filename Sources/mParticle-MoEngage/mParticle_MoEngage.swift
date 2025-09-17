@@ -278,19 +278,20 @@ extension MPKitMoEngage {
                 MoEngageSDKAnalytics.sharedInstance.identifyUser(
                     identities: identities, workspaceId: settings.workspaceId
                 )
+
+                // set attributes
+                if let email = request.email {
+                    MoEngageSDKAnalytics.sharedInstance.setEmailID(email, forAppID: settings.workspaceId)
+                }
+
+                if let mobile = request.userIdentities?[MPIdentity.mobileNumber.rawValue as NSNumber] {
+                    MoEngageSDKAnalytics.sharedInstance.setMobileNumber(mobile, forAppID: settings.workspaceId)
+                }
+
+                MoEngageSDKAnalytics.sharedInstance.setUserAttribute("\(user.userId)", withAttributeName: MPKitMoEngageConstant.mParticleId, forAppID: settings.workspaceId)
             }
         }
 
-        // set attributes
-        if let email = request.email {
-            MoEngageSDKAnalytics.sharedInstance.setEmailID(email, forAppID: settings.workspaceId)
-        }
-
-        if let mobile = request.userIdentities?[MPIdentity.mobileNumber.rawValue as NSNumber] {
-            MoEngageSDKAnalytics.sharedInstance.setMobileNumber(mobile, forAppID: settings.workspaceId)
-        }
-
-        MoEngageSDKAnalytics.sharedInstance.setUserAttribute("\(user.userId)", withAttributeName: MPKitMoEngageConstant.mParticleId, forAppID: settings.workspaceId)
         return execStatus(.success)
     }
 }
