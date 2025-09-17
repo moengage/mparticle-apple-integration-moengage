@@ -21,9 +21,7 @@ let package = Package(
         .library(name: "mParticle-MoEngage", targets: ["mParticle-MoEngage", "mParticle-MoEngageObjC"]),
     ],
     dependencies: [
-        .package(name: "mParticle-Apple-SDK",
-                 url: "https://github.com/mParticle/mparticle-apple-sdk",
-                 .upToNextMajor(from: "#{config.mParticleVersionSPM}"))
+        .package(url: "https://github.com/mParticle/mparticle-apple-sdk", from: "#{config.mParticleVersionSPM}"),
         .package(url: "https://github.com/moengage/MoEngage-iOS-SDK.git", "#{config.sdkVerMin}"..<"#{config.sdkVerMax}")
     ],
     targets: [
