@@ -1,7 +1,8 @@
 {
   "name": "mParticle-MoEngage",
   "postBuild": "Utilities/post_build.rb",
-  "mParticleVersion": "8.27.1",
+  "mParticleVersionSPM": "8.27.1",
+  "mParticleVersionCocoaPods": "8.27",
   "sdkVerMin": "9.21.0",
   "sdkVerMax": "9.22.0",
   "xcframework": {
