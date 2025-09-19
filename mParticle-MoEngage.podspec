@@ -27,7 +27,8 @@ Pod::Spec.new do |s|
     config = JSON.parse(File.read('package.json'), {object_class: OpenStruct})
     s.source_files = 'Sources/mParticle-MoEngage/**/*.swift', 'Sources/mParticle-MoEngageObjC/**/*.{h,m}'
     s.project_header_files = 'Sources/mParticle-MoEngageObjC/**/*.h'
-    s.dependency 'mParticle-Apple-SDK', "~> #{config.mParticleVersion}"
+    recommendation = Pod::Version.new(config.mParticleVersion).approximate_recommendation
+    s.dependency 'mParticle-Apple-SDK', "#{recommendation}"
     s.default_subspec = 'KMMedCore'
   
     s.subspec 'Core' do |ss|
