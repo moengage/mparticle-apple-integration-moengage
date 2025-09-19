@@ -18,7 +18,7 @@ This repository contains the [MoEngage](https://www.moengage.com) integration fo
 
     > Open your project and navigate to the project's settings. Select the tab named Swift Packages and click on the add button (+) at the bottom left. then, enter the URL of MoEngage Kit GitHub repository - https://github.com/moengage/mparticle-apple-integration-moengage and click Next.
 
-    [![Swift Package Manager](https://img.shields.io/github/v/tag/moengage/mParticle-MoEngage?label=SPM&color=orange)](https://badge.fury.io/gh/moengage%2FmParticle-MoEngage)
+    [![Swift Package Manager](https://img.shields.io/github/v/tag/moengage/mparticle-apple-integration-moengage?label=SPM&color=orange)](https://badge.fury.io/gh/moengage%2Fmparticle-apple-integration-moengage)
 
 1. Disable MoEngageSDK method swizzling by setting `MoEngageAppDelegateProxyEnabled` as `false`/`NO` in app's `Info.plist`.
 

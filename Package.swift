@@ -1,24 +1,27 @@
-// swift-tools-version:5.3
+// swift-tools-version:5.7
 // This file generated from post_build script, modify the script instaed of this file.
 
 import PackageDescription
 
 let package = Package(
     name: "mParticle-MoEngage",
-    platforms: [.iOS(.v11), .tvOS(.v11)],
+    platforms: [.iOS(.v13), .tvOS(.v13)],
     products: [
         .library(name: "mParticle-MoEngage", targets: ["mParticle-MoEngage", "mParticle-MoEngageObjC"]),
     ],
     dependencies: [
         .package(url: "https://github.com/mParticle/mparticle-apple-sdk", from: "8.27.1"),
-        .package(url: "https://github.com/moengage/MoEngage-iOS-SDK.git", "9.21.0"..<"9.22.0")
+        .package(url: "https://github.com/moengage/apple-sdk.git", "10.05.0"..<"10.06.0")
     ],
     targets: [
         .target(
             name: "mParticle-MoEngage",
             dependencies: [
                 .product(name: "mParticle-Apple-SDK", package: "mparticle-apple-sdk"),
-                .product(name: "MoEngage-iOS-SDK", package: "MoEngage-iOS-SDK")
+                .product(
+                    name: Context.environment["MOENGAGE_KMM_FREE"] != nil ? "MoEngageSDK" : "MoEngage-iOS-SDK",
+                    package: "apple-sdk"
+                )
             ]
         ),
         // ObjC target to load plugin

@@ -42,6 +42,7 @@ task :setup => [TUIST] do |t|
   end
 end
 
+# @todo: does not work anymore, need to handle require_relative in downloaded script
 desc <<~DESC
   Build XCFramework zips
   pass environment variables:

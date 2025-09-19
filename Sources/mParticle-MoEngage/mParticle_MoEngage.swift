@@ -10,7 +10,7 @@ import CoreLocation
 import MoEngageSDK
 import mParticle_Apple_SDK
 
-@objc
+@objc(MPKitMoEngage)
 public final class MPKitMoEngage: NSObject, MPKitProtocol {
     public private(set) var started: Bool = false
     public var configuration: [AnyHashable: Any] = [:]
@@ -18,7 +18,7 @@ public final class MPKitMoEngage: NSObject, MPKitProtocol {
 
     public func didFinishLaunching(withConfiguration configuration: [AnyHashable: Any]) -> MPKitExecStatus {
         guard var workspaceId = configuration[MPKitMoEngageConstant.workspaceId] as? String else {
-            MoEngageLogger.logDefault(message: "App ID not present in mParticle settings")
+            MoEngageLogger.logDefault(logLevel: .fatal, message: "App ID not present in mParticle settings")
             return execStatus(.requirementsNotMet)
         }
 
@@ -235,13 +235,13 @@ extension MPKitMoEngage {
     public func onIdentifyComplete(
         _ user: FilteredMParticleUser, request: FilteredMPIdentityApiRequest
     ) -> MPKitExecStatus {
-        return updateUser(user, request: request)
+        return updateUser(user, request: request, modified: false)
     }
 
     public func onLoginComplete(
         _ user: FilteredMParticleUser, request: FilteredMPIdentityApiRequest
     ) -> MPKitExecStatus {
-        return updateUser(user, request: request)
+        return updateUser(user, request: request, modified: false)
     }
 
     public func onLogoutComplete(
@@ -249,34 +249,49 @@ extension MPKitMoEngage {
     ) -> MPKitExecStatus {
         guard let settings = settings else { return execStatus(.requirementsNotMet) }
         MoEngageSDKAnalytics.sharedInstance.resetUser(forAppID: settings.workspaceId)
-        return updateUser(user, request: request)
+        return updateUser(user, request: request, modified: false)
     }
 
     public func onModifyComplete(
         _ user: FilteredMParticleUser, request: FilteredMPIdentityApiRequest
     ) -> MPKitExecStatus {
-        return updateUser(user, request: request)
+        return updateUser(user, request: request, modified: true)
     }
 
     private func updateUser(
-        _ user: FilteredMParticleUser, request: FilteredMPIdentityApiRequest
+        _ user: FilteredMParticleUser, request: FilteredMPIdentityApiRequest, modified: Bool
     ) -> MPKitExecStatus {
         guard let settings = settings else { return execStatus(.requirementsNotMet) }
-        if let userId = request.userIdentities?[MPIdentity.alias.rawValue as NSNumber] {
-            MoEngageSDKAnalytics.sharedInstance.setAlias(userId, forAppID: settings.workspaceId)
-        } else if let userId = request.customerId {
-            MoEngageSDKAnalytics.sharedInstance.setUniqueID(userId, forAppID: settings.workspaceId)
+
+        // set identities
+        if !user.userIdentities.isEmpty {
+            let identities: [(MPIdentity, String)] = user.userIdentities
+                .compactMap { key, value in
+                    guard
+                        let mParticleIdKey = MPIdentity(rawValue: key.uintValue)
+                    else { return nil }
+                    return (mParticleIdKey, value)
+                }
+            MoEngageConfigurator.map(
+                identities: Dictionary(identities) { $1 }
+            ) { identities in
+                MoEngageSDKAnalytics.sharedInstance.identifyUser(
+                    identities: identities, workspaceId: settings.workspaceId
+                )
+
+                // set attributes
+                if let email = request.email {
+                    MoEngageSDKAnalytics.sharedInstance.setEmailID(email, forAppID: settings.workspaceId)
+                }
+
+                if let mobile = request.userIdentities?[MPIdentity.mobileNumber.rawValue as NSNumber] {
+                    MoEngageSDKAnalytics.sharedInstance.setMobileNumber(mobile, forAppID: settings.workspaceId)
+                }
+
+                MoEngageSDKAnalytics.sharedInstance.setUserAttribute("\(user.userId)", withAttributeName: MPKitMoEngageConstant.mParticleId, forAppID: settings.workspaceId)
+            }
         }
 
-        if let email = request.email {
-            MoEngageSDKAnalytics.sharedInstance.setEmailID(email, forAppID: settings.workspaceId)
-        }
-
-        if let mobile = request.userIdentities?[MPIdentity.mobileNumber.rawValue as NSNumber] {
-            MoEngageSDKAnalytics.sharedInstance.setMobileNumber(mobile, forAppID: settings.workspaceId)
-        }
-
-        MoEngageSDKAnalytics.sharedInstance.setUserAttribute("\(user.userId)", withAttributeName: MPKitMoEngageConstant.mParticleId, forAppID: settings.workspaceId)
         return execStatus(.success)
     }
 }

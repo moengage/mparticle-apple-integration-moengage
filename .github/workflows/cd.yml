@@ -2,6 +2,22 @@ name: Create stable release
 
 on:
   workflow_dispatch:
+    inputs:
+      ticket:
+        description: Release ticket id for the GitHub commit (i.e. MOEN-1234)
+        type: string
+        required: true
+      note:
+        description: >
+          Release note for the GitHub release.
+          Can be the developers documentation link or a custom message.
+        type: string
+        required: true
+      sdk-version:
+        description: The SDK dependency version to update to, in the package.json
+        type: string
+        required: false
+        default: ''
 
 jobs:
   release:
@@ -37,9 +53,13 @@ jobs:
       with:
         dir: source
       env:
+        MO_RELEASE_TICKET: ${{ inputs.ticket }}
+        MO_RELEASE_NOTES: ${{ inputs.note }}
+        MO_SDK_DEPENDENCY_VERSION: ${{ inputs.sdk-version }}
         MO_CERTIFICATE_IDENTITY: ${{ secrets.MO_CERTIFICATE_IDENTITY }}
         GITHUB_TOKEN: ${{ secrets.SDK_BOT_ACCESS_TOKEN }}
         COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
+        MOENGAGE_KMM_FREE: true
 
     - name: Delete keychain
       if: always()

@@ -1,20 +1,34 @@
 require_relative '../Utilities/common'
 
+subspec_suffix = ENV['MOENGAGE_KMM_FREE'] ? '/Core' : ''
+puts "Adding subspec suffix: #{subspec_suffix}"
+
+# bridge abstract targets to include tests
+abstract_target 'BridgeiOS' do
+  platform :ios, '13.0'
+  use_frameworks!
+  pod 'mParticle-MoEngage', :testspecs => ['Tests'], :path => '../' # comment/remove :path to test released package
+end
+
+abstract_target 'BridgetvOS' do
+  platform :tvos, '13.0'
+  use_frameworks!
+  pod 'mParticle-MoEngage', :testspecs => ['Tests'], :path => '../' # comment/remove :path to test released package
+end
+
 target 'MoEngageCocoaApp' do
-  platform :ios, '11.0'
+  platform :ios, '13.0'
   use_frameworks!
 
   # Pods for MoEngageCocoaApp
-  pod 'mParticle-MoEngage', :testspecs => ['Tests'], :path => '../' # comment/remove :path to test released package
+  pod "mParticle-MoEngage#{subspec_suffix}", :path => '../' # comment/remove :path to test released package
 
   # Development source setup
   dev_source = MPKit.dev_source
   if dev_source
     pod 'MoEngageSecurity', **dev_source
     pod 'MoEngageCore', **dev_source
-    pod 'MoEngageAnalytics', **dev_source
     pod 'MoEngageMessaging', **dev_source
-    pod 'MoEngageObjCUtils', **dev_source
     pod 'MoEngageSDK', **dev_source
     pod 'MoEngage-iOS-SDK', **dev_source
   end
@@ -47,20 +61,18 @@ target 'MoEngageCocoaApp' do
 end
 
 target 'MoEngageCocoaTVApp' do
-  platform :tvos, '11.0'
+  platform :tvos, '13.0'
   use_frameworks!
 
   # Pods for MoEngageCocoaTVApp
-  pod 'mParticle-MoEngage', :testspecs => ['Tests'], :path => '../' # comment/remove :path to test released package
+  pod "mParticle-MoEngage#{subspec_suffix}", :path => '../' # comment/remove :path to test released package
 
   # Development source setup
   dev_source = MPKit.dev_source
   if dev_source
     pod 'MoEngageSecurity', **dev_source
     pod 'MoEngageCore', **dev_source
-    pod 'MoEngageAnalytics', **dev_source
     pod 'MoEngageMessaging', **dev_source
-    pod 'MoEngageObjCUtils', **dev_source
     pod 'MoEngageSDK', **dev_source
     pod 'MoEngage-iOS-SDK', **dev_source
   end

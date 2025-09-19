@@ -2,8 +2,8 @@
   "name": "mParticle-MoEngage",
   "postBuild": "Utilities/post_build.rb",
   "mParticleVersion": "8.27.1",
-  "sdkVerMin": "9.21.0",
-  "sdkVerMax": "9.22.0",
+  "sdkVerMin": "10.05.0",
+  "sdkVerMax": "10.06.0",
   "xcframework": {
     "pre": "rake setup",
     "workspace": "Examples/MoEngagemParticle.xcworkspace",
@@ -23,7 +23,7 @@
       {
         "platform": "tvOS",
         "schemes": {
-          "mParticle-MoEngage": "mParticle-MoEngage-tvOS"
+          "mParticle-MoEngages": "mParticle-MoEngage-tvOS"
         }
       },
       {
@@ -38,6 +38,7 @@
     {
       "name": "mParticle-MoEngage",
       "version": "1.0.0",
+      "changelog": "CHANGELOG.md",
       "tagPrefix": ""
     }
   ]

@@ -5,24 +5,27 @@
 //  Created by Soumya Ranjan Mahunt on 04/09/24.
 //
 
-import XCTest
+import Testing
 import MoEngageSDK
 import mParticle_Apple_SDK
 @testable import mParticle_MoEngage
 
-final class mParticle_MoEngageTests: XCTestCase {
+@Suite(.serialized)
+final class mParticle_MoEngageTests {
+    @Test
+    func mParticleClassName() {
+        let expectedString = "MPKitMoEngage"
+        #expect(expectedString == NSStringFromClass(MPKitMoEngage.self))
+    }
 
-    func testiOSEmptyConfig() throws {
-        guard UIDevice.current.userInterfaceIdiom != .tv else {
-            throw XCTSkip("Skipping iOS only test")
-        }
-
+    @Test(.enabled(if: UIDevice.current.userInterfaceIdiom != .tv))
+    func iOSEmptyConfig() throws {
         let kit = MPKitMoEngage()
         let result = kit.didFinishLaunching(withConfiguration: [:])
-        XCTAssertEqual(result.returnCode, .requirementsNotMet)
-        XCTAssertFalse(kit.started)
-        XCTAssertNil(kit.settings)
-        XCTAssertNil(kit.providerKitInstance)
+        #expect(result.returnCode == .requirementsNotMet)
+        #expect(!kit.started)
+        #expect(kit.settings == nil)
+        #expect(kit.providerKitInstance == nil)
 
         let activity = NSUserActivity(activityType: "moengage")
         activity.webpageURL = .init(string: "https://moengage.com/")
@@ -52,27 +55,39 @@ final class mParticle_MoEngageTests: XCTestCase {
         ]
 
         for (index, result) in results.enumerated() {
-            let line: UInt = #line - UInt(results.count) - 3 + UInt(index)
-            XCTAssertFalse(result.success, line: line)
-            XCTAssertEqual(result.returnCode, .requirementsNotMet, line: line)
-            XCTAssertEqual(result.integrationId, MPKitMoEngageConstant.kitCode as NSNumber, line: line)
+            let line = #line - results.count - 3 + index
+            let sourceLocation = SourceLocation(
+                fileID: #fileID, filePath: #fileID,
+                line: line, column: #column
+            )
+            #expect(!result.success, sourceLocation: sourceLocation)
+            #expect(result.returnCode == .requirementsNotMet, sourceLocation: sourceLocation)
+            #expect(result.integrationId == MPKitMoEngageConstant.kitCode as NSNumber, sourceLocation: sourceLocation)
         }
     }
 
-    func testiOSValidConfig() throws {
-        guard UIDevice.current.userInterfaceIdiom != .tv else {
-            throw XCTSkip("Skipping iOS only test")
-        }
-
+    @Test(.enabled(if: UIDevice.current.userInterfaceIdiom != .tv))
+    func iOSValidConfig() async throws {
         let kit = MPKitMoEngage()
         let config = [MPKitMoEngageConstant.workspaceId: "abcde"]
-        let exp = XCTNSNotificationExpectation(name: .mParticleKitDidBecomeActive)
+        let stream = AsyncStream { continuation in
+            var observer: Any!
+            observer = NotificationCenter.default.addObserver(
+                forName: .mParticleKitDidBecomeActive,
+                object: nil, queue: .main
+            ) { notification in
+                continuation.yield(())
+                NotificationCenter.default.removeObserver(observer as Any)
+                continuation.finish()
+            }
+        }
+
         let result = kit.didFinishLaunching(withConfiguration: config)
-        XCTAssertEqual(result.returnCode, .success)
-        XCTAssertTrue(kit.started)
-        XCTAssertEqual(kit.settings?.workspaceId, "abcde")
-        XCTAssertEqual(kit.providerKitInstance as? MoEngage, MoEngage.sharedInstance)
-        wait(for: [exp], timeout: 5)
+        for await _ in stream { break }
+        #expect(result.returnCode == .success)
+        #expect(kit.started)
+        #expect(kit.settings?.workspaceId == "abcde")
+        #expect(kit.providerKitInstance as? MoEngage == MoEngage.sharedInstance)
 
         let activity = NSUserActivity(activityType: "moengage")
         activity.webpageURL = .init(string: "https://moengage.com/")
@@ -102,27 +117,39 @@ final class mParticle_MoEngageTests: XCTestCase {
         ]
 
         for (index, result) in results.enumerated() {
-            let line: UInt = #line - UInt(results.count) - 3 + UInt(index)
-            XCTAssertTrue(result.success, line: line)
-            XCTAssertEqual(result.returnCode, .success, line: line)
-            XCTAssertEqual(result.integrationId, MPKitMoEngageConstant.kitCode as NSNumber, line: line)
+            let line = #line - results.count - 3 + index
+            let sourceLocation = SourceLocation(
+                fileID: #fileID, filePath: #fileID,
+                line: line, column: #column
+            )
+            #expect(result.success, sourceLocation: sourceLocation)
+            #expect(result.returnCode == .success, sourceLocation: sourceLocation)
+            #expect(result.integrationId == MPKitMoEngageConstant.kitCode as NSNumber, sourceLocation: sourceLocation)
         }
     }
 
-    func testiOSValidTestConfig() throws {
-        guard UIDevice.current.userInterfaceIdiom != .tv else {
-            throw XCTSkip("Skipping iOS only test")
-        }
-
+    @Test(.enabled(if: UIDevice.current.userInterfaceIdiom != .tv))
+    func iOSValidTestConfig() async throws {
         let kit = MPKitMoEngage()
         let config = [MPKitMoEngageConstant.workspaceId: "abcde_DEBUG"]
-        let exp = XCTNSNotificationExpectation(name: .mParticleKitDidBecomeActive)
+        let stream = AsyncStream { continuation in
+            var observer: Any!
+            observer = NotificationCenter.default.addObserver(
+                forName: .mParticleKitDidBecomeActive,
+                object: nil, queue: .main
+            ) { notification in
+                continuation.yield(())
+                NotificationCenter.default.removeObserver(observer as Any)
+                continuation.finish()
+            }
+        }
+
         let result = kit.didFinishLaunching(withConfiguration: config)
-        XCTAssertEqual(result.returnCode, .success)
-        XCTAssertTrue(kit.started)
-        XCTAssertEqual(kit.settings?.workspaceId, "abcde")
-        XCTAssertEqual(kit.providerKitInstance as? MoEngage, MoEngage.sharedInstance)
-        wait(for: [exp], timeout: 5)
+        for await _ in stream { break }
+        #expect(result.returnCode == .success)
+        #expect(kit.started)
+        #expect(kit.settings?.workspaceId == "abcde")
+        #expect(kit.providerKitInstance as? MoEngage == MoEngage.sharedInstance)
 
         let activity = NSUserActivity(activityType: "moengage")
         activity.webpageURL = .init(string: "https://moengage.com/")
@@ -152,24 +179,25 @@ final class mParticle_MoEngageTests: XCTestCase {
         ]
 
         for (index, result) in results.enumerated() {
-            let line: UInt = #line - UInt(results.count) - 3 + UInt(index)
-            XCTAssertTrue(result.success, line: line)
-            XCTAssertEqual(result.returnCode, .success, line: line)
-            XCTAssertEqual(result.integrationId, MPKitMoEngageConstant.kitCode as NSNumber, line: line)
+            let line = #line - results.count - 3 + index
+            let sourceLocation = SourceLocation(
+                fileID: #fileID, filePath: #fileID,
+                line: line, column: #column
+            )
+            #expect(result.success, sourceLocation: sourceLocation)
+            #expect(result.returnCode == .success, sourceLocation: sourceLocation)
+            #expect(result.integrationId == MPKitMoEngageConstant.kitCode as NSNumber, sourceLocation: sourceLocation)
         }
     }
 
-    func testtvOSEmptyConfig() throws {
-        guard UIDevice.current.userInterfaceIdiom == .tv else {
-            throw XCTSkip("Skipping tvOS only test")
-        }
-
+    @Test(.enabled(if: UIDevice.current.userInterfaceIdiom == .tv))
+    func tvOSEmptyConfig() throws {
         let kit = MPKitMoEngage()
         let result = kit.didFinishLaunching(withConfiguration: [:])
-        XCTAssertEqual(result.returnCode, .requirementsNotMet)
-        XCTAssertFalse(kit.started)
-        XCTAssertNil(kit.settings)
-        XCTAssertNil(kit.providerKitInstance)
+        #expect(result.returnCode == .requirementsNotMet)
+        #expect(!kit.started)
+        #expect(kit.settings == nil)
+        #expect(kit.providerKitInstance == nil)
 
         let activity = NSUserActivity(activityType: "moengage")
         activity.webpageURL = .init(string: "https://moengage.com/")
@@ -197,27 +225,39 @@ final class mParticle_MoEngageTests: XCTestCase {
         ]
 
         for (index, result) in results.enumerated() {
-            let line: UInt = #line - UInt(results.count) - 3 + UInt(index)
-            XCTAssertFalse(result.success, line: line)
-            XCTAssertEqual(result.returnCode, .requirementsNotMet, line: line)
-            XCTAssertEqual(result.integrationId, MPKitMoEngageConstant.kitCode as NSNumber, line: line)
+            let line = #line - results.count - 3 + index
+            let sourceLocation = SourceLocation(
+                fileID: #fileID, filePath: #fileID,
+                line: line, column: #column
+            )
+            #expect(!result.success, sourceLocation: sourceLocation)
+            #expect(result.returnCode == .requirementsNotMet, sourceLocation: sourceLocation)
+            #expect(result.integrationId == MPKitMoEngageConstant.kitCode as NSNumber, sourceLocation: sourceLocation)
         }
     }
 
-    func testtvOSValidConfig() throws {
-        guard UIDevice.current.userInterfaceIdiom == .tv else {
-            throw XCTSkip("Skipping tvOS only test")
-        }
-
+    @Test(.enabled(if: UIDevice.current.userInterfaceIdiom == .tv))
+    func tvOSValidConfig() async throws {
         let kit = MPKitMoEngage()
         let config = [MPKitMoEngageConstant.workspaceId: "abcde"]
-        let exp = XCTNSNotificationExpectation(name: .mParticleKitDidBecomeActive)
+        let stream = AsyncStream { continuation in
+            var observer: Any!
+            observer = NotificationCenter.default.addObserver(
+                forName: .mParticleKitDidBecomeActive,
+                object: nil, queue: .main
+            ) { notification in
+                continuation.yield(())
+                NotificationCenter.default.removeObserver(observer as Any)
+                continuation.finish()
+            }
+        }
+
         let result = kit.didFinishLaunching(withConfiguration: config)
-        XCTAssertEqual(result.returnCode, .success)
-        XCTAssertTrue(kit.started)
-        XCTAssertEqual(kit.settings?.workspaceId, "abcde")
-        XCTAssertEqual(kit.providerKitInstance as? MoEngage, MoEngage.sharedInstance)
-        wait(for: [exp], timeout: 5)
+        for await _ in stream { break }
+        #expect(result.returnCode == .success)
+        #expect(kit.started)
+        #expect(kit.settings?.workspaceId == "abcde")
+        #expect(kit.providerKitInstance as? MoEngage == MoEngage.sharedInstance)
 
         let activity = NSUserActivity(activityType: "moengage")
         activity.webpageURL = .init(string: "https://moengage.com/")
@@ -244,20 +284,26 @@ final class mParticle_MoEngageTests: XCTestCase {
         ]
 
         for (index, result) in results.enumerated() {
-            let line: UInt = #line - UInt(results.count) - 3 + UInt(index)
-            XCTAssertTrue(result.success, line: line)
-            XCTAssertEqual(result.returnCode, .success, line: line)
-            XCTAssertEqual(result.integrationId, MPKitMoEngageConstant.kitCode as NSNumber, line: line)
+            let line = #line - results.count - 3 + index
+            let sourceLocation = SourceLocation(
+                fileID: #fileID, filePath: #fileID,
+                line: line, column: #column
+            )
+            #expect(result.success, sourceLocation: sourceLocation)
+            #expect(result.returnCode == .success, sourceLocation: sourceLocation)
+            #expect(result.integrationId == MPKitMoEngageConstant.kitCode as NSNumber, sourceLocation: sourceLocation)
         }
     }
 
-    func testApplicationOpenWithMissingURL() {
+    @Test
+    func applicationOpenWithMissingURL() {
         let kit = MPKitMoEngage()
         let result = kit.continue(.init(activityType: "test"), restorationHandler: { _ in })
-        XCTAssertEqual(result.returnCode, .requirementsNotMet)
+        #expect(result.returnCode == .requirementsNotMet)
     }
 
-    func testCommerceEvent() {
+    @Test
+    func commerceEvent() {
         let kit = MPKitMoEngage()
         let config = [MPKitMoEngageConstant.workspaceId: "abcde"]
         let _ = kit.didFinishLaunching(withConfiguration: config)
@@ -271,37 +317,35 @@ final class mParticle_MoEngageTests: XCTestCase {
         let event = MPCommerceEvent(action: .purchase, product: product)
         event.transactionAttributes = attributes;
         let result = kit.logBaseEvent(event)
-        XCTAssertEqual(result.returnCode, .success)
+        #expect(result.returnCode == .success)
     }
 
-    func testInvalidPushPayload() throws {
-        guard UIDevice.current.userInterfaceIdiom != .tv else {
-            throw XCTSkip("Skipping iOS only test")
-        }
-
+    @Test(.enabled(if: UIDevice.current.userInterfaceIdiom != .tv))
+    func invalidPushPayload() throws {
         let kit = MPKitMoEngage()
         let config = [MPKitMoEngageConstant.workspaceId: "abcde"]
         let _ = kit.didFinishLaunching(withConfiguration: config)
 
-        let userInfo: [String: Any] = ["moengage": ["cid": "test", "app_id": "abcde"]]
+        let userInfo: [String: Any] = ["moengage": ["app_id": "abcde"]]
         let results = [
             kit.receivedUserNotification(userInfo),
             kit.handleAction(withIdentifier: "action", forRemoteNotification: userInfo),
         ]
 
         for (index, result) in results.enumerated() {
-            let line: UInt = #line - UInt(results.count) - 3 + UInt(index)
-            XCTAssertFalse(result.success, line: line)
-            XCTAssertEqual(result.returnCode, .requirementsNotMet, line: line)
-            XCTAssertEqual(result.integrationId, MPKitMoEngageConstant.kitCode as NSNumber, line: line)
+            let line = #line - results.count - 3 + index
+            let sourceLocation = SourceLocation(
+                fileID: #fileID, filePath: #fileID,
+                line: line, column: #column
+            )
+            #expect(!result.success, sourceLocation: sourceLocation)
+            #expect(result.returnCode == .requirementsNotMet, sourceLocation: sourceLocation)
+            #expect(result.integrationId == MPKitMoEngageConstant.kitCode as NSNumber, sourceLocation: sourceLocation)
         }
     }
 
-    func testNonMoEngagePushPayload() throws {
-        guard UIDevice.current.userInterfaceIdiom != .tv else {
-            throw XCTSkip("Skipping iOS only test")
-        }
-
+    @Test(.enabled(if: UIDevice.current.userInterfaceIdiom != .tv))
+    func nonMoEngagePushPayload() throws {
         let kit = MPKitMoEngage()
         let config = [MPKitMoEngageConstant.workspaceId: "abcde"]
         let _ = kit.didFinishLaunching(withConfiguration: config)
@@ -313,29 +357,31 @@ final class mParticle_MoEngageTests: XCTestCase {
         ]
 
         for (index, result) in results.enumerated() {
-            let line: UInt = #line - UInt(results.count) - 3 + UInt(index)
-            XCTAssertFalse(result.success, line: line)
-            XCTAssertEqual(result.returnCode, .requirementsNotMet, line: line)
-            XCTAssertEqual(result.integrationId, MPKitMoEngageConstant.kitCode as NSNumber, line: line)
+            let line = #line - results.count - 3 + index
+            let sourceLocation = SourceLocation(
+                fileID: #fileID, filePath: #fileID,
+                line: line, column: #column
+            )
+            #expect(!result.success, sourceLocation: sourceLocation)
+            #expect(result.returnCode == .requirementsNotMet, sourceLocation: sourceLocation)
+            #expect(result.integrationId == MPKitMoEngageConstant.kitCode as NSNumber, sourceLocation: sourceLocation)
         }
     }
 
-    func testIDFARestricted() throws {
+    @Test
+    func idfaRestricted() throws {
         let kit = MPKitMoEngage()
         let config = [MPKitMoEngageConstant.workspaceId: "abcde"]
         let _ = kit.didFinishLaunching(withConfiguration: config)
 
         let result = kit.setATTStatus(.restricted, withATTStatusTimestampMillis: nil)
-        XCTAssertFalse(result.success)
-        XCTAssertEqual(result.returnCode, .unavailable)
-        XCTAssertEqual(result.integrationId, MPKitMoEngageConstant.kitCode as NSNumber)
+        #expect(!result.success)
+        #expect(result.returnCode == .unavailable)
+        #expect(result.integrationId == MPKitMoEngageConstant.kitCode as NSNumber)
     }
 
-    func testtvOSUnavailableAPIs() throws {
-        guard UIDevice.current.userInterfaceIdiom == .tv else {
-            throw XCTSkip("Skipping tvOS only test")
-        }
-
+    @Test(.enabled(if: UIDevice.current.userInterfaceIdiom == .tv))
+    func tvOSUnavailableAPIs() throws {
         let kit = MPKitMoEngage()
         let config = [MPKitMoEngageConstant.workspaceId: "abcde"]
         let _ = kit.didFinishLaunching(withConfiguration: config)
@@ -346,10 +392,101 @@ final class mParticle_MoEngageTests: XCTestCase {
         ]
 
         for (index, result) in results.enumerated() {
-            let line: UInt = #line - UInt(results.count) - 3 + UInt(index)
-            XCTAssertFalse(result.success, line: line)
-            XCTAssertEqual(result.returnCode, .unavailable, line: line)
-            XCTAssertEqual(result.integrationId, MPKitMoEngageConstant.kitCode as NSNumber, line: line)
+            let line = #line - results.count - 3 + index
+            let sourceLocation = SourceLocation(
+                fileID: #fileID, filePath: #fileID,
+                line: line, column: #column
+            )
+            #expect(!result.success, sourceLocation: sourceLocation)
+            #expect(result.returnCode == .unavailable, sourceLocation: sourceLocation)
+            #expect(result.integrationId == MPKitMoEngageConstant.kitCode as NSNumber, sourceLocation: sourceLocation)
         }
+    }
+
+    @Test
+    func defaultIdentityMapping() async {
+        let identities1 = await withCheckedContinuation { continuation in MoEngageConfigurator.map(identities: [:]) { identities in
+                continuation.resume(returning: identities)
+            }
+        }
+        #expect(identities1.isEmpty)
+
+        let identities2 = await withCheckedContinuation { continuation in
+            MoEngageConfigurator.map(identities: [
+                MPIdentity.customerId: "customerId",
+                MPIdentity.email: "email@abc.com",
+                MPIdentity.mobileNumber: "1234567890"
+            ]) { identities in
+                continuation.resume(returning: identities)
+            }
+        }
+        #expect(identities2 == [
+            MoEngageAnalyticsConstants.UserIdentityNames.uid: "customerId",
+            MoEngageAnalyticsConstants.UserIdentityNames.email: "email@abc.com",
+            MoEngageAnalyticsConstants.UserIdentityNames.mobileNumber: "1234567890"
+        ])
+
+        let identities3 = await withCheckedContinuation { continuation in
+            MoEngageConfigurator.map(identities: [
+                MPIdentity.customerId: "customerId",
+                MPIdentity.alias: "alias",
+                MPIdentity.email: "email@abc.com",
+                MPIdentity.mobileNumber: "1234567890"
+            ]) { identities in
+                continuation.resume(returning: identities)
+            }
+        }
+        #expect(identities3 == [
+            MoEngageAnalyticsConstants.UserIdentityNames.uid: "alias",
+            MoEngageAnalyticsConstants.UserIdentityNames.email: "email@abc.com",
+            MoEngageAnalyticsConstants.UserIdentityNames.mobileNumber: "1234567890"
+        ])
+    }
+
+    @Test
+    func customIdentityMapping() async {
+        MoEngageConfigurator.setMapping(forIdentities: [
+            MPIdentity.customerId: "cId",
+            MPIdentity.alias: "al",
+            MPIdentity.email: "email",
+            MPIdentity.mobileNumber: "mob"
+        ])
+
+        let identities1 = await withCheckedContinuation { continuation in MoEngageConfigurator.map(identities: [:]) { identities in
+                continuation.resume(returning: identities)
+            }
+        }
+        #expect(identities1.isEmpty)
+
+        let identities2 = await withCheckedContinuation { continuation in
+            MoEngageConfigurator.map(identities: [
+                MPIdentity.customerId: "customerId",
+                MPIdentity.email: "email@abc.com",
+                MPIdentity.mobileNumber: "1234567890"
+            ]) { identities in
+                continuation.resume(returning: identities)
+            }
+        }
+        #expect(identities2 == [
+            "cId": "customerId",
+            "email": "email@abc.com",
+            "mob": "1234567890"
+        ])
+
+        let identities3 = await withCheckedContinuation { continuation in
+            MoEngageConfigurator.map(identities: [
+                MPIdentity.customerId: "customerId",
+                MPIdentity.alias: "alias",
+                MPIdentity.email: "email@abc.com",
+                MPIdentity.mobileNumber: "1234567890"
+            ]) { identities in
+                continuation.resume(returning: identities)
+            }
+        }
+        #expect(identities3 == [
+            "al": "alias",
+            "email": "email@abc.com",
+            "mob": "1234567890"
+        ])
     }
 }
