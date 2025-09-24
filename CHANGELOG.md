@@ -1,9 +1,9 @@
-# 24-09-2025
+# Release Date
 
-## 2.0.0
+## Release Version
 
-- Added multi-id support.
-- Added Info.plist based initialization.
-- Updated iOS and tvOS deployment target to 13.
-- Updated MoEngage-iOS-SDK to 10.07.0
-- Fixed latest version of `mParticle-Apple-SDK` not included in dependency
+- [minor] Added multi-id support.
+- [minor] Added Info.plist based initialization.
+- [major] Updated iOS and tvOS deployment target to 13.
+- [major] Updated MoEngage-iOS-SDK to 10.07.0
+- [patch] Fixed latest version of `mParticle-Apple-SDK` not included in dependency
