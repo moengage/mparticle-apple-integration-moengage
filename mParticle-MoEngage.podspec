@@ -2,8 +2,9 @@ require 'json'
 require 'ostruct'
 
 Pod::Spec.new do |s|
+    config = JSON.parse(File.read('package.json'), {object_class: OpenStruct})
     s.name             = 'mParticle-MoEngage'
-    s.version          = '1.0.0'
+    s.version          = config.packages.first().version
     s.summary          = 'MoEngageSDK integration for mParticle'
 
     s.description      = <<-DESC
@@ -24,7 +25,6 @@ Pod::Spec.new do |s|
     s.ios.deployment_target  = '13.0'
     s.tvos.deployment_target = '13.0'
 
-    config = JSON.parse(File.read('package.json'), {object_class: OpenStruct})
     s.source_files = 'Sources/mParticle-MoEngage/**/*.swift', 'Sources/mParticle-MoEngageObjC/**/*.{h,m}'
     s.project_header_files = 'Sources/mParticle-MoEngageObjC/**/*.h'
     recommendation = Pod::Version.new(config.mParticleVersion).approximate_recommendation
