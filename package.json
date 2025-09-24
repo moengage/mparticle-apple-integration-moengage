@@ -11,25 +11,25 @@
       {
         "platform": "iOS",
         "schemes": {
-          "mParticle-MoEngage": "mParticle-MoEngage-iOS"
+          "mParticle-MoEngage": "mParticle-MoEngage-Core-iOS"
         }
       },
       {
         "platform": "iOS Simulator",
         "schemes": {
-          "mParticle-MoEngage": "mParticle-MoEngage-iOS"
+          "mParticle-MoEngage": "mParticle-MoEngage-Core-iOS"
         }
       },
       {
         "platform": "tvOS",
         "schemes": {
-          "mParticle-MoEngages": "mParticle-MoEngage-tvOS"
+          "mParticle-MoEngages": "mParticle-MoEngage-Core-tvOS"
         }
       },
       {
         "platform": "tvOS Simulator",
         "schemes": {
-          "mParticle-MoEngage": "mParticle-MoEngage-tvOS"
+          "mParticle-MoEngage": "mParticle-MoEngage-Core-tvOS"
         }
       }
     ]
@@ -37,7 +37,7 @@
   "packages": [
     {
       "name": "mParticle-MoEngage",
-      "version": "2.0.0",
+      "version": "1.0.0",
       "changelog": "CHANGELOG.md",
       "tagPrefix": ""
     }
