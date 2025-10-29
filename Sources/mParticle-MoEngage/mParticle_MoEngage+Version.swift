@@ -2,5 +2,5 @@
 import Foundation
 
 extension MPKitMoEngageConstant {
-    static let moduleVersion = "2.0.0"
+    static let moduleVersion = "2.1.0"
 }
