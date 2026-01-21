@@ -43,6 +43,7 @@ Pod::Spec.new do |s|
     s.test_spec 'Tests' do |ts|
       ts.source_files = "Tests/mParticle-MoEngageTests/**/*.{swift,h,m}"
       ts.dependency 'mParticle-Apple-SDK'
+      ts.requires_app_host = true
       ts.scheme = { :code_coverage => true }
     end
 end
