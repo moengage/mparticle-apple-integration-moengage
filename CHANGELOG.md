@@ -1,8 +1,8 @@
-# Release Date
+# 22-01-2026
 
-## Release Version
+## 2.2.0
 
-- [minor] Updated MoEngage-iOS-SDK to 10.09.0
+- Updated MoEngage-iOS-SDK to 10.09.0
 
 # 29-10-2025
 
