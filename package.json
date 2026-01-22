@@ -2,8 +2,8 @@
   "name": "mParticle-MoEngage",
   "postBuild": "Utilities/post_build.rb",
   "mParticleVersion": "8.27.1",
-  "sdkVerMin": "10.08.0",
-  "sdkVerMax": "10.09.0",
+  "sdkVerMin": "10.09.0",
+  "sdkVerMax": "10.10.0",
   "xcframework": {
     "pre": "rake setup",
     "workspace": "Examples/MoEngagemParticle.xcworkspace",
