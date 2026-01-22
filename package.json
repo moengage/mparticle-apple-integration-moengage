@@ -37,7 +37,7 @@
   "packages": [
     {
       "name": "mParticle-MoEngage",
-      "version": "2.2.0",
+      "version": "2.1.0",
       "changelog": "CHANGELOG.md",
       "tagPrefix": ""
     }
