@@ -66,6 +66,11 @@ final class mParticle_MoEngageTests {
         }
     }
 
+    // SPM cannot host an app; UNUserNotificationCenter.current() asserts on
+    // bundleProxyForCurrentProcess from Xcode 26 onward. Sibling to MOEN-42758,
+    // which fixed the equivalent crash for the CocoaPods scheme via
+    // requires_app_host = true. Tests below run only under the CocoaPods scheme.
+    #if !SWIFT_PACKAGE
     @Test(.enabled(if: UIDevice.current.userInterfaceIdiom != .tv))
     func iOSValidConfig() async throws {
         let kit = MPKitMoEngage()
@@ -189,6 +194,7 @@ final class mParticle_MoEngageTests {
             #expect(result.integrationId == MPKitMoEngageConstant.kitCode as NSNumber, sourceLocation: sourceLocation)
         }
     }
+    #endif
 
     @Test(.enabled(if: UIDevice.current.userInterfaceIdiom == .tv))
     func tvOSEmptyConfig() throws {
