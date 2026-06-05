@@ -9,6 +9,36 @@ EXAMPLES = 'Examples'
 LOCK = File.join(EXAMPLES, 'Podfile.lock')
 TUIST = File.join(`brew --prefix`.strip, 'bin', 'tuist')
 
+# Retries `pod install --repo-update` on CocoaPods CDN propagation lag —
+# observed when chained partner releases run before the freshly-pushed
+# native pod is visible in the CDN index. Only retries on spec-resolution
+# failures; any other failure bubbles up immediately.
+def pod_install_with_retry(max_attempts: 5, initial_delay: 30)
+  attempt = 0
+  delay = initial_delay
+  loop do
+    attempt += 1
+    output = +''
+    IO.popen('pod install --repo-update 2>&1', 'r') do |io|
+      io.each_line do |line|
+        print line
+        output << line
+      end
+    end
+    status = $?
+    return if status.success?
+
+    cdn_lag = output.include?('could not find compatible versions')
+    if cdn_lag && attempt < max_attempts
+      puts "[Rakefile] pod install failed — likely CocoaPods CDN propagation lag (attempt #{attempt}/#{max_attempts}). Retrying in #{delay}s..."
+      sleep delay
+      delay = [delay * 2, 480].min
+    else
+      raise "pod install --repo-update failed (exit #{status.exitstatus})"
+    end
+  end
+end
+
 file TUIST do
   system('brew install tuist', out: STDOUT, exception: true)
 end
@@ -22,7 +52,7 @@ end
 
 file LOCK => [config.xcframework.workspace] do
   Dir.chdir(EXAMPLES) do
-    system('pod install --repo-update', out: STDOUT, exception: true)
+    pod_install_with_retry
   end
 end
 
@@ -38,7 +68,7 @@ task :setup => [TUIST] do |t|
     pod_lock_file = 'Podfile.lock'
     FileUtils.rm(pod_lock_file) if File.exist?(pod_lock_file)
     system('tuist generate --no-open', out: STDOUT, exception: true)
-    system('pod install --repo-update', out: STDOUT, exception: true)
+    pod_install_with_retry
   end
 end
 
