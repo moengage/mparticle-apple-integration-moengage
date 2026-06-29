@@ -1,3 +1,6 @@
+source 'https://github.com/moengage/PodSpecs'
+source 'https://github.com/CocoaPods/Specs.git'
+
 require_relative '../Utilities/common'
 
 subspec_suffix = ENV['MOENGAGE_KMM_FREE'] ? '/Core' : ''
