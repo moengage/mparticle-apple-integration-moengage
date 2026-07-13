@@ -81,13 +81,21 @@ desc <<~DESC
 DESC
 task :xcframework => [config.xcframework.workspace] do |t, args|
   require 'net/http'
+  common_script = URI('https://raw.githubusercontent.com/moengage/sdk-automation-scripts/refs/heads/master/scripts/release/ios/common.rb')
+  common_req = Net::HTTP::Get.new(common_script.request_uri)
+  common_req['Authorization'] = "Bearer #{ENV['GITHUB_TOKEN']}"
+  common_http = Net::HTTP.new(common_script.host, common_script.port)
+  common_http.use_ssl = true
+  common_res = common_http.request(common_req)
   xcframework_script = URI('https://raw.githubusercontent.com/moengage/sdk-automation-scripts/refs/heads/master/scripts/release/ios/xcframework.rb')
-  req = Net::HTTP::Get.new(xcframework_script.request_uri)
-  req['Authorization'] = "Bearer #{ENV['GITHUB_TOKEN']}"
-  http = Net::HTTP.new(xcframework_script.host, xcframework_script.port)
-  http.use_ssl = true
-  res = http.request(req)
-  eval(res.body)
+  xcframework_req = Net::HTTP::Get.new(xcframework_script.request_uri)
+  xcframework_req['Authorization'] = "Bearer #{ENV['GITHUB_TOKEN']}"
+  xcframework_http = Net::HTTP.new(xcframework_script.host, xcframework_script.port)
+  xcframework_http.use_ssl = true
+  xcframework_res = xcframework_http.request(xcframework_req)
+  script = xcframework_res.body
+  script.gsub!("require_relative 'common'", "\n#{common_res.body}\n")
+  eval(script)
 end
 
 namespace 'test' do
