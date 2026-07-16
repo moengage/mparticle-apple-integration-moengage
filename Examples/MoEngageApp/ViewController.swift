@@ -75,7 +75,7 @@ class ViewController: UIViewController {
             }
         }),
         ("Set IDFA", { [unowned self] in
-            if #available(iOS 14, *) {
+            if #available(iOS 14, tvOS 14, *) {
                 ATTrackingManager.requestTrackingAuthorization { status in
                     print("ADTracking status: \"\(status)\"")
                     self.mPartcle.setATTStatus(.init(rawValue: status.rawValue) ?? .notDetermined, withATTStatusTimestampMillis: nil)
@@ -111,7 +111,9 @@ class ViewController: UIViewController {
         ("Set ISO birthday", {  }),
         ("Set ISO date", {  }),
         ("Set Location", { [unowned self] in
+            #if !os(tvOS)
             self.mPartcle.location = .init(latitude: 12.9716, longitude: 77.5946)
+            #endif
         }),
         ("Set User Attributes", { [unowned self] in
             guard
@@ -121,7 +123,9 @@ class ViewController: UIViewController {
                 return
             }
             currentUser.setUserAttribute("date", value: Date())
+            #if !os(tvOS)
             currentUser.setUserAttribute("location", value: CLLocation(latitude: 12.9716, longitude: 77.5946))
+            #endif
             currentUser.setUserAttribute("top_region", value: "Europe")
             currentUser.setUserAttribute("trips_booked", value: 1)
             currentUser.setUserAttribute("done_trips", value: true)

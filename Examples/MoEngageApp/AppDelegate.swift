@@ -60,6 +60,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 }
 
 // MARK: Push Callback
+#if !os(tvOS)
 extension AppDelegate: UNUserNotificationCenterDelegate {
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         mParticle.userNotificationCenter(center, didReceive: response)
@@ -71,6 +72,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         completionHandler([.alert , .sound])
     }
 }
+#endif
 
 // MARK: Navigation Callbacks
 extension AppDelegate {
