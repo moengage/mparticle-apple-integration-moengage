@@ -1,3 +1,9 @@
+# Release Date
+
+## Release Version
+
+- [minor] Adopt Swift concurrency isolation in destination
+ 
 # 29-06-2026
 
 ## 2.7.0
