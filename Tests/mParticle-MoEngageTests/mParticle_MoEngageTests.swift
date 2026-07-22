@@ -17,8 +17,16 @@ final class mParticle_MoEngageTests {
         MoEngageConfigurator.configureDefaultInstance(sdkConfig: config)
     }()
 
+    // Swift Testing runs `init()` as per-test setup on a fresh instance; the
+    // run-once `static let` makes the actual SDK init happen exactly once for the
+    // whole (serialized) suite. Under SPM there is no app host, and
+    // `configureDefaultInstance` transitively calls
+    // `UNUserNotificationCenter.current()`, which asserts — so SDK init (and
+    // every SDK-routed test) is compiled out for SPM.
     init() {
+        #if !SWIFT_PACKAGE
         _ = Self.initializeSDK
+        #endif
     }
 
     @Test
@@ -251,6 +259,9 @@ final class mParticle_MoEngageTests {
         }
     }
 
+    // Starts the kit with a valid workspace and exercises SDK-routed APIs, which
+    // require an initialized SDK — unavailable under SPM (see `init()`).
+    #if !SWIFT_PACKAGE
     @Test(.enabled(if: UIDevice.current.userInterfaceIdiom == .tv))
     func tvOSValidConfig() async throws {
         let kit = MPKitMoEngage()
@@ -309,6 +320,7 @@ final class mParticle_MoEngageTests {
             #expect(result.integrationId == MPKitMoEngageConstant.kitCode as NSNumber, sourceLocation: sourceLocation)
         }
     }
+    #endif
 
     @Test
     func applicationOpenWithMissingURL() {
@@ -317,6 +329,10 @@ final class mParticle_MoEngageTests {
         #expect(result.returnCode == .requirementsNotMet)
     }
 
+    // The tests below start the kit with a valid workspace and route to
+    // SDK APIs, so they require SDK initialization — unavailable under SPM
+    // (see `init()`). They run only under the CocoaPods scheme.
+    #if !SWIFT_PACKAGE
     @Test
     func commerceEvent() {
         let kit = MPKitMoEngage()
@@ -417,6 +433,7 @@ final class mParticle_MoEngageTests {
             #expect(result.integrationId == MPKitMoEngageConstant.kitCode as NSNumber, sourceLocation: sourceLocation)
         }
     }
+    #endif
 
     @Test
     func defaultIdentityMapping() async {
