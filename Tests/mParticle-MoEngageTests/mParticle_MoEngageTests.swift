@@ -12,6 +12,15 @@ import mParticle_Apple_SDK
 
 @Suite(.serialized)
 final class mParticle_MoEngageTests {
+    private static let initializeSDK: Void = {
+        let config = MoEngageSDKConfig(appId: "abcde", dataCenter: .data_center_01)
+        MoEngageConfigurator.configureDefaultInstance(sdkConfig: config)
+    }()
+
+    init() {
+        _ = Self.initializeSDK
+    }
+
     @Test
     func mParticleClassName() {
         let expectedString = "MPKitMoEngage"
