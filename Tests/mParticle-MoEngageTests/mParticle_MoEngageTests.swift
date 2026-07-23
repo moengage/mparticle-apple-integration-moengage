@@ -13,7 +13,7 @@ import mParticle_Apple_SDK
 @Suite(.serialized)
 final class mParticle_MoEngageTests {
     private static let initializeSDK: Void = {
-        let config = MoEngageSDKConfig(appId: "appId", dataCenter: .data_center_01)
+        let config = MoEngageSDKConfig(appId: "abcde", dataCenter: .data_center_01)
         MoEngageConfigurator.configureDefaultInstance(sdkConfig: config)
     }()
 
