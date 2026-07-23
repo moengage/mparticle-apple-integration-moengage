@@ -11,7 +11,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/mParticle/mparticle-apple-sdk", from: "8.27.1"),
-        .package(url: "https://github.com/moengage/apple-sdk.git", "11.00.0"..<"11.01.0")
+        .package(url: "https://github.com/moengage/apple-sdk.git", "10.14.0"..<"10.15.0")
     ],
     targets: [
         .target(

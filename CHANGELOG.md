@@ -1,9 +1,8 @@
-# 22-07-2026
+# Release Date
 
-## 3.0.0
+## Release Version
 
-- Updated MoEngage-iOS-SDK to 11.00.0
-- Adopt Swift concurrency isolation in destination
+- [minor] Adopt Swift concurrency isolation in destination
  
 # 29-06-2026
 
