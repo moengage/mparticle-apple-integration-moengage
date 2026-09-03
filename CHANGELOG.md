@@ -1,8 +1,9 @@
-# Release Date
+# 03-09-2026
 
-## Release Version
+## 3.1.0
 
-- [minor] Declared the pod as a static framework, to stay consistent with MoEngage-iOS-SDK's now-statically-linked app-only modules and avoid duplicate class definitions at runtime.
+- Updated MoEngage-iOS-SDK to 11.01.0
+- Declared the pod as a static framework, to stay consistent with MoEngage-iOS-SDK's now-statically-linked app-only modules and avoid duplicate class definitions at runtime.
 
 # 23-07-2026
 
