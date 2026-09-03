@@ -1,3 +1,9 @@
+# Release Date
+
+## Release Version
+
+- [minor] Declared the pod as a static framework, to stay consistent with MoEngage-iOS-SDK's now-statically-linked app-only modules and avoid duplicate class definitions at runtime.
+
 # 23-07-2026
 
 ## 3.0.0
