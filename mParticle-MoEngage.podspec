@@ -27,6 +27,14 @@ Pod::Spec.new do |s|
 
     s.source_files = 'Sources/mParticle-MoEngage/**/*.swift', 'Sources/mParticle-MoEngageObjC/**/*.{h,m}'
     s.project_header_files = 'Sources/mParticle-MoEngageObjC/**/*.h'
+    # MoEngage-iOS-SDK's app-only modules (MoEngageSDK, MoEngageCore, etc.) are statically
+    # linked. A dynamic pod depending on a static one gets that static code baked into its
+    # own framework; if the same static code is also linked independently into a sibling
+    # binary (e.g. the generated test app host), the runtime ends up with two separate
+    # copies of the same class ("Class X is implemented in both..."), and `as?` casts
+    # between them fail. Making this pod static too keeps the whole dependency chain on one
+    # consistent linkage model, so only a single copy of the shared classes exists.
+    s.static_framework = true
     recommendation = Pod::Version.new(config.mParticleVersion).approximate_recommendation
     s.dependency 'mParticle-Apple-SDK', "#{recommendation}"
     s.default_subspec = 'KMMedCore'
