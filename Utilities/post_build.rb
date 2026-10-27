@@ -16,7 +16,7 @@ import PackageDescription
 
 let package = Package(
     name: "mParticle-MoEngage",
-    platforms: [.iOS(.v13), .tvOS(.v13)],
+    platforms: [.iOS(.v15), .tvOS(.v15)],
     products: [
         .library(name: "mParticle-MoEngage", targets: ["mParticle-MoEngage", "mParticle-MoEngageObjC"]),
     ],

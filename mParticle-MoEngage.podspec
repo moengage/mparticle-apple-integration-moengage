@@ -22,8 +22,8 @@ Pod::Spec.new do |s|
     }
 
     s.swift_version          = '5.3'
-    s.ios.deployment_target  = '13.0'
-    s.tvos.deployment_target = '13.0'
+    s.ios.deployment_target  = '15.0'
+    s.tvos.deployment_target = '15.0'
 
     s.source_files = 'Sources/mParticle-MoEngage/**/*.swift', 'Sources/mParticle-MoEngageObjC/**/*.{h,m}'
     s.project_header_files = 'Sources/mParticle-MoEngageObjC/**/*.h'
@@ -48,10 +48,29 @@ Pod::Spec.new do |s|
       ss.dependency 'MoEngage-iOS-SDK/KMMedCore'
     end
 
+    # Host app for the unit tests. CocoaPods' generated `AppHost` has no scene support, and
+    # apps built with the iOS/tvOS 27 SDK must adopt the scene life cycle or crash at launch.
+    s.app_spec 'TestHost' do |app|
+      app.source_files = 'Tests/TestHost/**/*.swift'
+      app.info_plist = {
+        'UIApplicationSceneManifest' => {
+          'UIApplicationSupportsMultipleScenes' => false,
+          'UISceneConfigurations' => {
+            'UIWindowSceneSessionRoleApplication' => [{
+              'UISceneConfigurationName' => 'Default Configuration',
+              'UISceneDelegateClassName' => 'MoEngageTestHostSceneDelegate'
+            }]
+          }
+        }
+      }
+    end
+
     s.test_spec 'Tests' do |ts|
       ts.source_files = "Tests/mParticle-MoEngageTests/**/*.{swift,h,m}"
       ts.dependency 'mParticle-Apple-SDK'
       ts.requires_app_host = true
+      ts.app_host_name = 'mParticle-MoEngage/TestHost'
+      ts.dependency 'mParticle-MoEngage/TestHost'
       ts.scheme = { :code_coverage => true }
     end
 end

@@ -1,3 +1,9 @@
+# Release Date
+
+## Release Version
+
+- [major] Raised the minimum deployment target to iOS 15.0 and tvOS 15.0 and added support for Xcode 27.1
+
 # 14-10-2026
 
 ## 3.4.0
