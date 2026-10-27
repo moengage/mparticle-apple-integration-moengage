@@ -17,7 +17,7 @@ concurrency:
 jobs:
   cocoapods:
     name: Build and run tests for CocoaPods
-    runs-on: macos-15
+    runs-on: xcode-27
 
     steps:
     - name: Set custom environment variables
@@ -34,6 +34,8 @@ jobs:
         token: ${{ secrets.SDK_BOT_ACCESS_TOKEN }}
         path: scripts
         repository: moengage/sdk-automation-scripts
+        # TODO(SDK-35): remove after sdk-automation-scripts feature/SDK-35-xcode-27 is merged
+        ref: feature/SDK-35-xcode-27
 
     - name: Setup dev environment
       uses: ./scripts/actions/ios-action-setup
@@ -55,7 +57,7 @@ jobs:
 
   swift-package:
     name: Build and run tests for Swift Package Manager
-    runs-on: macos-15
+    runs-on: xcode-27
 
     steps:
     - name: Set custom environment variables
@@ -72,6 +74,8 @@ jobs:
         token: ${{ secrets.SDK_BOT_ACCESS_TOKEN }}
         path: scripts
         repository: moengage/sdk-automation-scripts
+        # TODO(SDK-35): remove after sdk-automation-scripts feature/SDK-35-xcode-27 is merged
+        ref: feature/SDK-35-xcode-27
 
     - name: Setup dev environment
       uses: ./scripts/actions/ios-action-setup

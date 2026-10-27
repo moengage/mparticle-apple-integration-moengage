@@ -12,7 +12,6 @@ import mParticle_MoEngage
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
-    var window: UIWindow?
     lazy var mParticle = MParticle.sharedInstance()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -75,26 +74,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
 #endif
 
 // MARK: Navigation Callbacks
-extension AppDelegate {
-    func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([any UIUserActivityRestoring]?) -> Void) -> Bool {
-        mParticle.continue(userActivity, restorationHandler: restorationHandler)
-    }
-
-    func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-        mParticle.open(url, options: options)
-        return true
-    }
-
-    func application(_ application: UIApplication, handleOpen url: URL) -> Bool {
-        mParticle.open(url)
-        return true
-    }
-
-    func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
-        mParticle.open(url, sourceApplication: sourceApplication, annotation: annotation)
-        return true
-    }
-}
+// URLs and universal links are delivered to `SceneDelegate` under the scene life cycle.
 
 // MARK: Proxied methods
 // Enable if proxy disabled

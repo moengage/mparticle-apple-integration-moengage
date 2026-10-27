@@ -22,8 +22,8 @@ Pod::Spec.new do |s|
     }
 
     s.swift_version          = '5.3'
-    s.ios.deployment_target  = '13.0'
-    s.tvos.deployment_target = '13.0'
+    s.ios.deployment_target  = '15.0'
+    s.tvos.deployment_target = '15.0'
 
     s.source_files = 'Sources/mParticle-MoEngage/**/*.swift', 'Sources/mParticle-MoEngageObjC/**/*.{h,m}'
     s.project_header_files = 'Sources/mParticle-MoEngageObjC/**/*.h'

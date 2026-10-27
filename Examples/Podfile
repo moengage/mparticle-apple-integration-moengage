@@ -8,19 +8,19 @@ puts "Adding subspec suffix: #{subspec_suffix}"
 
 # bridge abstract targets to include tests
 abstract_target 'BridgeiOS' do
-  platform :ios, '13.0'
+  platform :ios, '15.0'
   use_frameworks!
   pod 'mParticle-MoEngage', :testspecs => ['Tests'], :path => '../' # comment/remove :path to test released package
 end
 
 abstract_target 'BridgetvOS' do
-  platform :tvos, '13.0'
+  platform :tvos, '15.0'
   use_frameworks!
   pod 'mParticle-MoEngage', :testspecs => ['Tests'], :path => '../' # comment/remove :path to test released package
 end
 
 target 'MoEngageCocoaApp' do
-  platform :ios, '13.0'
+  platform :ios, '15.0'
   use_frameworks!
 
   # Pods for MoEngageCocoaApp
@@ -64,7 +64,7 @@ target 'MoEngageCocoaApp' do
 end
 
 target 'MoEngageCocoaTVApp' do
-  platform :tvos, '13.0'
+  platform :tvos, '15.0'
   use_frameworks!
 
   # Pods for MoEngageCocoaTVApp
@@ -78,5 +78,18 @@ target 'MoEngageCocoaTVApp' do
     pod 'MoEngageMessaging', **dev_source
     pod 'MoEngageSDK', **dev_source
     pod 'MoEngage-iOS-SDK', **dev_source
+  end
+end
+
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    target.build_configurations.each do |config|
+      # raise pods declaring an older deployment target (e.g. mParticle-Apple-SDK)
+      # to the minimum supported by current Xcode
+      ['IPHONEOS_DEPLOYMENT_TARGET', 'TVOS_DEPLOYMENT_TARGET'].each do |key|
+        current = config.build_settings[key]
+        config.build_settings[key] = '15.0' if current && Gem::Version.new(current) < Gem::Version.new('15.0')
+      end
+    end
   end
 end
